@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="ques">Dont have an account?</string>
+    <string name="signup">SignUp</string>
+</resources>

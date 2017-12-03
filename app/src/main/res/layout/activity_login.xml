@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/usernameWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/margin"
+                android:layout_marginTop="30dp">
+
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:hint="Username" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/usernameWrapper"
+                style="@style/margin">
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="Password" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn"
+                android:layout_marginTop="28dp"
+                style="@style/margin"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:textSize="15sp"
+                android:background="#4CAF50" />
+
+            <LinearLayout
+                android:id="@+id/or"
+                android:layout_below="@id/btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight=".22"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/darker_gray"></View>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="or connect with"
+                    android:layout_weight="0.56"
+                    android:gravity="center_horizontal"
+                    android:textSize="15sp"
+                    android:textAllCaps="true"/>
+                <View
+                    android:layout_marginTop="8dp"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight=".22"
+                    android:layout_marginRight="20dp"
+                    android:background="@android:color/darker_gray"></View>
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/form"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="110dp">
+
+            <ImageView
+                android:id="@+id/logo_fb"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:src="@drawable/fb" />
+
+            <ImageView
+
+                android:layout_width="42sp"
+                android:layout_height="42sp"
+                android:layout_marginLeft="50dp"
+                android:layout_toRightOf="@id/logo_fb"
+                android:src="@drawable/google"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="70dp"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/q"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ques"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/sign_up"
+                android:layout_toLeftOf="@id/q"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signup"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_marginLeft="10dp"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
