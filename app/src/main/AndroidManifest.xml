@@ -20,8 +20,9 @@
         <activity
             android:name=".LoginActivity"
             android:label="Login">
-
         </activity>
+
+        <activity android:name=".SignupActivity" android:label="SignUp"></activity>
 
     </application>
 
