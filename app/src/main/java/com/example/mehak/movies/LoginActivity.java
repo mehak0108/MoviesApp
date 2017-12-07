@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -25,6 +26,15 @@ public class LoginActivity extends AppCompatActivity {
         usernameWrapper.setHint("Email Id");
         passwordWrapper.setHint("Password");
 
+
+        Button dash = (Button)findViewById(R.id.btn);
+        dash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(intent);
+            }
+        });
 
         TextView sign = (TextView)findViewById(R.id.sign_up);
         sign.setOnClickListener(new View.OnClickListener() {

@@ -19,10 +19,34 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="Login">
+            android:label="Login"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
 
-        <activity android:name=".SignupActivity" android:label="SignUp"></activity>
+        <activity
+            android:name=".SignupActivity"
+            android:label="SignUp"
+            android:parentActivityName=".LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+
+        <activity android:name=".DashboardActivity"
+            android:label="Dashboard">
+
+        </activity>
+
+        <activity android:name=".OngoingActivity"
+            android:label="Ongoing">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardActivity" />
+
+        </activity>
 
     </application>
 

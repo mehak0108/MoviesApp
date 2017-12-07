@@ -3,4 +3,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ongoing"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".33"
+            android:text="Ongoing"
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"/>
+        <TextView
+            android:id="@+id/comingSoon"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.34"
+            android:text="Coming Soon"
+            android:background="@android:color/holo_red_light"
+            android:textColor="@android:color/white"/>
+        <TextView
+            android:id="@+id/retro"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".33"
+            android:text="Retro"
+            android:background="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
