@@ -11,27 +11,27 @@
         <TextView
             android:id="@+id/ongoing"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".33"
-            android:text="Ongoing"
+            android:layout_height="30dp"
+            android:text="@string/ongoing_"
             android:background="@android:color/black"
             android:textColor="@android:color/white"/>
-        <TextView
+        <!--TextView
             android:id="@+id/comingSoon"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.34"
             android:text="Coming Soon"
             android:background="@android:color/holo_red_light"
-            android:textColor="@android:color/white"/>
-        <TextView
+            android:textColor="@android:color/white"/-->
+        <!--TextView
             android:id="@+id/retro"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".33"
             android:text="Retro"
             android:background="@android:color/holo_blue_light"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"/-->
+
 
     </LinearLayout>
 

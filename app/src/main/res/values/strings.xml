@@ -2,4 +2,12 @@
     <string name="app_name">Movies</string>
     <string name="ques">Dont have an account?</string>
     <string name="signup">SignUp</string>
+    <string name="search">Search</string>
+    <string name="api_key">7139ff052030e32d5a0620148625fcbe</string>
+    <string name="pref_general_key">sort_by</string>
+    <string name="popularity">popularity</string>
+    <string name="ongoing_">Ongoing</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

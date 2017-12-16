@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
         usernameWrapper.setHint("Email Id");
         passwordWrapper.setHint("Password");
 
-
         Button dash = (Button)findViewById(R.id.btn);
         dash.setOnClickListener(new View.OnClickListener() {
             @Override

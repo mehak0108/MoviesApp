@@ -1,61 +1,77 @@
 package com.example.mehak.movies;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MovieAdapter extends ArrayAdapter<Movie> {
+    private Context context;
+    private List<Movie> list;
 
     public MovieAdapter(Context context, ArrayList<Movie> movies){
 
-        super(context,0,movies);
+
+        super(context,0 , movies);
+        this.context = context;
+        list = movies;
 
     }
 
-    @NonNull
+
+    public void add(Movie obj) {
+        this.list.add(obj);
+    }
+
+
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public int getCount() {
+        return list.size();
+    }
+
+    @Override
+    public Movie getItem(int i) {
+        return list.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int position,  View convertView, ViewGroup parent) {
         View listItemView = convertView;
         if(listItemView == null)
         {
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item,parent,false);
+            listItemView = LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
         }
 
-        Movie currentMovie= getItem(position);
+        final Movie currentMovie= getItem(position);
 
         TextView nameTextView= (TextView)listItemView.findViewById(R.id.movieName);
-        nameTextView.setText(currentMovie.getMovie_name());
+        nameTextView.setText(currentMovie.title);
 
-        TextView genreTextView= (TextView)listItemView.findViewById(R.id.movieGenre);
-        genreTextView.setText(currentMovie.getGenre());
-
-        TextView yearTextView= (TextView)listItemView.findViewById(R.id.movieYear);
-        yearTextView.setText(currentMovie.getYear_of_release());
+        TextView genreTextView= (TextView)listItemView.findViewById(R.id.movieRating);
+        genreTextView.setText("User Rating: " + currentMovie.user_rating);
 
         TextView langTextView= (TextView)listItemView.findViewById(R.id.movieLanguage);
-        langTextView.setText(currentMovie.getLanguage());
+        langTextView.setText("Language: " + currentMovie.language);
 
         ImageView imageView = (ImageView) listItemView.findViewById(R.id.image);
-        if (currentMovie.checkImage()) {
-            imageView.setImageResource(currentMovie.getImage_id());
-            imageView.setVisibility(View.VISIBLE);
-        } else {
-            imageView.setVisibility(View.INVISIBLE);
-        }
-
-
-
-
+        Picasso.with(context).load(list.get(position).poster_path).into(imageView);
 
         return listItemView;
     }
+
 }

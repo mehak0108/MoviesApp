@@ -1,3 +1,4 @@
+/*
 package com.example.mehak.movies;
 
 import android.os.Bundle;
@@ -23,4 +24,32 @@ public class OngoingActivity extends AppCompatActivity {
 
 
     }
+}
+*/
+
+package com.example.mehak.movies;
+import android.nfc.Tag;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ListView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+
+public class OngoingActivity extends AppCompatActivity {
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_category);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new OngoingFragment()).commit();
+
+    }
+
 }
