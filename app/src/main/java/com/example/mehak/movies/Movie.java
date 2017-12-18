@@ -4,6 +4,8 @@ package com.example.mehak.movies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 public class Movie implements Parcelable{
     public String title;
     public String poster_path;

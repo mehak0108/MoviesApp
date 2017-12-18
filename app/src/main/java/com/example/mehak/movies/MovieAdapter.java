@@ -15,14 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MovieAdapter extends ArrayAdapter<Movie> {
+public class MovieAdapter extends BaseAdapter {
     private Context context;
     private List<Movie> list;
 
     public MovieAdapter(Context context, ArrayList<Movie> movies){
-
-
-        super(context,0 , movies);
+        
         this.context = context;
         list = movies;
 
@@ -57,7 +55,8 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             listItemView = LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
         }
 
-        final Movie currentMovie= getItem(position);
+        Movie currentMovie;
+        currentMovie= getItem(position);
 
         TextView nameTextView= (TextView)listItemView.findViewById(R.id.movieName);
         nameTextView.setText(currentMovie.title);
