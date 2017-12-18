@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +27,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
@@ -37,10 +43,23 @@ public class OngoingFragment extends Fragment {
     private String BASE_URL = "http://api.themoviedb.org/3/discover/movie";
     ArrayList<Movie> moviesList;
     MovieAdapter adapter;
+    private String title;
+    private int page;
+
+    public static OngoingFragment newInstance(int page, String title){
+        OngoingFragment var = new OngoingFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", page);
+        args.putString("someTitle", title);
+        var.setArguments(args);
+        return var;
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        page = getArguments().getInt("someInt", 0);
+        title = getArguments().getString("someTitle");
     }
 
     @Override
@@ -76,6 +95,8 @@ public class OngoingFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", moviesList);
+        Log.w(TAG, "ok");
     }
 
     @Override
@@ -95,7 +116,7 @@ public class OngoingFragment extends Fragment {
 
         Log.v(TAG, "onCreateView");
         if (savedInstanceState == null || !savedInstanceState.containsKey("moviesList")) {
-            moviesList=new ArrayList<Movie>();
+            moviesList = new ArrayList<Movie>();
             adapter = new MovieAdapter(getActivity(), moviesList);
             updateMovie();
         } else {
@@ -111,8 +132,7 @@ public class OngoingFragment extends Fragment {
         return rootView;
     }
 
-    public void updateMovie()
-    {
+    public void updateMovie() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sort_by = prefs.getString(getString(R.string.pref_general_key), getString(R.string.popularity));
         moviesList.clear();
@@ -120,29 +140,57 @@ public class OngoingFragment extends Fragment {
         movieTask.execute(sort_by);
 
     }
+
     class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
         Movie[] movieObj;
         int i;
-
         String json_str = null;
+        final String SORT_BY = "sort_by";
+        final String API_KEY = "api_key";
+        final String PAGE = "page";
+        final String DATENEW = "release_date.gte";
+        final String DATEOLD = "release_date.lte";
+        Uri uri;
+
+       /* public Date dateToString() throws ParseException {
+            Date date;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+            String dateInString= "2017-01-01";
+            date = df.parse(dateInString);
+
+            return date;
+
+        }*/
+
 
         @Override
         protected Movie[] doInBackground(String... param) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-
             String sort_by_category = param[0];
-            final String SORT_BY = "sort_by";
-            final String API_KEY = "api_key";
-            final String PAGE = "page";
+            for (i = 1; i <= 5; i++) {
 
-            for (i=1 ; i<=5; i++) {
-                Uri uri = Uri.parse(BASE_URL).buildUpon().
-                        appendQueryParameter(SORT_BY, sort_by_category + ".desc").
-                        appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
-                        appendQueryParameter(PAGE, String.valueOf(i)).
-                    build();
+
+                    uri = Uri.parse(BASE_URL).buildUpon().
+                            appendQueryParameter(SORT_BY, sort_by_category + ".desc").
+                            appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
+                            appendQueryParameter(PAGE, String.valueOf(i)).
+
+                            appendQueryParameter(DATENEW, "2017-10-01").
+                            build();
+                    Log.w(TAG, uri.toString());
+
+
+                    /*uri = Uri.parse(BASE_URL).buildUpon().
+                            appendQueryParameter(SORT_BY, sort_by_category + ".desc").
+                            appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
+                            appendQueryParameter(PAGE, String.valueOf(i)).
+                            appendQueryParameter(DATEOLD, String.valueOf(2016 - 01 - 01)).
+                            build();
+*/
+
                 try {
                     URL url = new URL(uri.toString());
                     urlConnection = (HttpURLConnection) url.openConnection();
@@ -196,53 +244,49 @@ public class OngoingFragment extends Fragment {
         @Override
         protected void onPostExecute(Movie[] m) {
             //adapter.clear();
-            for (Movie current: m )
+            for (Movie current : m)
                 adapter.add(current);
             adapter.notifyDataSetChanged();
 
 
         }
-        }
+    }
 
-        private Movie[] getMoviedata(String s){
-            final String MOVIEDB_RESULT = "results";
-            final String MOVIEDB_TITLE = "title";
-            final String MOVIEDB_POSTER_PATH = "poster_path";
-            final String OVERVIEW = "overview";
-            final String RELEASE_DATE = "release_date";
-            final String USER_RATING = "vote_average";
-            final String image_path = "backdrop_path";
-            final String IMAGE_URL = "http://image.tmdb.org/t/p/w342/";
-            final String ID = "id";
-            final String LANG = "original_language";
+    private Movie[] getMoviedata(String s) {
+        final String MOVIEDB_RESULT = "results";
+        final String MOVIEDB_TITLE = "title";
+        final String MOVIEDB_POSTER_PATH = "poster_path";
+        final String OVERVIEW = "overview";
+        final String RELEASE_DATE = "release_date";
+        final String USER_RATING = "vote_average";
+        final String image_path = "backdrop_path";
+        final String IMAGE_URL = "http://image.tmdb.org/t/p/w342/";
+        final String ID = "id";
+        final String LANG = "original_language";
 
-            JSONObject obj = null;
-            Movie[] resultList = null;
-            try {
-                obj = new JSONObject(s);
-                JSONArray ar = obj.getJSONArray(MOVIEDB_RESULT);
-                resultList = new Movie[ar.length()];
-                for (int i = 0; i < ar.length(); i++) {
-                    JSONObject jsonobject = ar.getJSONObject(i);
-                    Movie movie = new Movie();
-                    movie.title = jsonobject.getString(MOVIEDB_TITLE);
-                    movie.user_rating = jsonobject.getString(USER_RATING);
-                    movie.language = jsonobject.getString(LANG);
-                    movie.poster_path = IMAGE_URL + jsonobject.getString(MOVIEDB_POSTER_PATH);
-                    resultList[i]= movie;
-                    moviesList.add(movie);
+        JSONObject obj = null;
+        Movie[] resultList = null;
+        try {
+            obj = new JSONObject(s);
+            JSONArray ar = obj.getJSONArray(MOVIEDB_RESULT);
+            resultList = new Movie[ar.length()];
+            for (int i = 0; i < ar.length(); i++) {
+                JSONObject jsonobject = ar.getJSONObject(i);
+                Movie movie = new Movie();
+                movie.title = jsonobject.getString(MOVIEDB_TITLE);
+                movie.user_rating = jsonobject.getString(USER_RATING);
+                movie.language = jsonobject.getString(LANG);
+                movie.poster_path = IMAGE_URL + jsonobject.getString(MOVIEDB_POSTER_PATH);
+                resultList[i] = movie;
+                moviesList.add(movie);
 
-                }
-        } catch (JSONException e) {
-                e.printStackTrace();
             }
-            return resultList;
-
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        return resultList;
 
-
-
-
+    }
 
 
 }

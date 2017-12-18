@@ -7,6 +7,19 @@
     <string name="pref_general_key">sort_by</string>
     <string name="popularity">popularity</string>
     <string name="ongoing_">Ongoing</string>
+    <string name="pref_general_title">Sort By</string>
+    <string-array name="pref_general_entries">
+        <item>Popularity</item>
+        <item>Rating</item>
+        <item>Favorites</item>
+    </string-array>
+    <string-array name="pref_general_entryValues">
+        <item>popularity</item>
+        <item>vote_average</item>
+        <item>favorites</item>
+    </string-array>
+
+    <string name="pref_general_summary">Sort the movies by choosing a category</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

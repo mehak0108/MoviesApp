@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
+import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
+//import com.example.mehak.movies.Settings.SettingsActivity;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -28,7 +33,16 @@ public class DashboardActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        TextView ongoing= (TextView)findViewById(R.id.ongoing);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        viewPager.setPageTransformer(true, new AccordionTransformer());
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+
+        /*TextView ongoing= (TextView)findViewById(R.id.ongoing);
         ongoing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,6 +50,15 @@ public class DashboardActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+
+        TextView retro = (TextView)findViewById(R.id.retro);
+        retro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashboardActivity.this,RetroActivity.class);
+                startActivity(intent);
+            }
+        });*/
 
     }
 
@@ -49,8 +72,9 @@ public class DashboardActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuItemThatWasSelected = item.getItemId();
         if(menuItemThatWasSelected == R.id.action_search){
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
 
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }

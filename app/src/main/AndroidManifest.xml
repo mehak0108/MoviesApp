@@ -39,8 +39,8 @@
         </activity>
 
         <activity android:name=".DashboardActivity"
-            android:label="Dashboard">
-
+            android:label="Dashboard"
+            android:launchMode="singleTop">
         </activity>
 
         <activity android:name=".OngoingActivity"
@@ -50,6 +50,24 @@
                 android:value=".DashboardActivity" />
 
         </activity>
+
+        <activity android:name=".RetroActivity"
+            android:label="Retro">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardActivity"/>
+        </activity>
+
+        <activity android:name=".SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".DashboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardActivity"/>
+
+        </activity>
+        
+
 
     </application>
 
