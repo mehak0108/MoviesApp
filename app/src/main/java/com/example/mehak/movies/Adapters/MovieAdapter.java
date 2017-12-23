@@ -1,18 +1,18 @@
-package com.example.mehak.movies;
+package com.example.mehak.movies.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mehak.movies.Classes.Movie;
+import com.example.mehak.movies.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MovieAdapter extends BaseAdapter {
@@ -20,7 +20,7 @@ public class MovieAdapter extends BaseAdapter {
     private List<Movie> list;
 
     public MovieAdapter(Context context, ArrayList<Movie> movies){
-        
+
         this.context = context;
         list = movies;
 

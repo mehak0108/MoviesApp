@@ -1,10 +1,8 @@
-package com.example.mehak.movies;
+package com.example.mehak.movies.Classes;
 
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.util.Date;
 
 public class Movie implements Parcelable{
     public String title;

@@ -3,10 +3,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/movies_fragment"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".DashboardActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:name="com.example.mehak.movies.OngoingFragment"
+    tools:context="com.example.mehak.movies.OngoingActivity">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
@@ -22,5 +24,5 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-</LinearLayout>
 
+</LinearLayout>

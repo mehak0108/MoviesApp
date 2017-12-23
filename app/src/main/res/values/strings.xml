@@ -19,6 +19,7 @@
         <item>favorites</item>
     </string-array>
 
+    <string name="rating">Rating:      </string>
     <string name="pref_general_summary">Sort the movies by choosing a category</string>
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -2,7 +2,7 @@ package com.example.mehak.movies.data;
 
 import android.content.Context;
 
-import com.example.mehak.movies.Movie;
+import com.example.mehak.movies.Classes.Movie;
 import com.example.mehak.movies.data.MovieContract.MovieEntry;
 
 import android.database.Cursor;

@@ -66,6 +66,14 @@
                 android:value=".DashboardActivity"/>
 
         </activity>
+
+        <activity android:name=".DetailActivity"
+            android:label="Details"
+            android:parentActivityName=".DashboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardActivity"></meta-data>
+        </activity>
         
 
 

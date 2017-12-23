@@ -1,7 +1,7 @@
 package com.example.mehak.movies;
 
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,8 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.example.mehak.movies.Adapters.MovieAdapter;
+import com.example.mehak.movies.Classes.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +58,10 @@ public class OngoingFragment extends Fragment {
         return var;
     }
 
+    public interface Callback {
+        public void onItemSelected(Movie movie);
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -63,8 +70,8 @@ public class OngoingFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
     }
 
     @Override
@@ -90,6 +97,8 @@ public class OngoingFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //onCreate();
+
     }
 
     @Override
@@ -129,7 +138,32 @@ public class OngoingFragment extends Fragment {
         ListView lv = (ListView) rootView.findViewById(R.id.list);
         adapter = new MovieAdapter(getActivity(), moviesList);
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((Callback) getActivity()).onItemSelected(moviesList.get(position));
+            }
+        });
         return rootView;
+    }
+
+    public void onPreferenceChanged(String sort_by) {
+        Log.v(TAG, "PREFERENCE CHANGED");
+        moviesList.clear();
+        FetchMovieTask movieTask = new FetchMovieTask();
+        movieTask.execute(sort_by);
+        /*if(sort_by.equals(getString(R.string.favorites))){
+            fetchFavorites();
+        }
+        else{
+            if(isNetworkAvailable()) {
+
+            }
+            else
+                Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection",
+                        Toast.LENGTH_LONG).show();
+        }*/
     }
 
     public void updateMovie() {
@@ -177,8 +211,7 @@ public class OngoingFragment extends Fragment {
                         appendQueryParameter(SORT_BY, sort_by_category + ".desc").
                         appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
                         appendQueryParameter(PAGE, String.valueOf(i)).
-
-                       // appendQueryParameter(DATENEW, "2017-10-01").
+                        appendQueryParameter(DATENEW, "2017-10-10").
                         build();
                 Log.w(TAG, uri.toString());
 
@@ -253,15 +286,19 @@ public class OngoingFragment extends Fragment {
     }
 
     String newDateString;
-    Date startDate;
+    static Date startDate;
+    static Calendar cal;
 
-    public Date stringToDate(String s) {
-        String startDateString = "08/01/2017";
+    public static Date stringToDate(String s) {
+        //  String startDateString = "08/01/2017";
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 
         try {
             startDate = df.parse(s);
+            Log.w(TAG, startDate.toString());
+            Log.w(TAG, df.format(startDate));
+
             //newDateString = df.format(startDate);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -272,8 +309,9 @@ public class OngoingFragment extends Fragment {
 
 
     public static int getYear(Date date) {
-        Calendar cal = Calendar.getInstance();
+        cal = Calendar.getInstance();
         cal.setTime(date);
+        Log.e(TAG, String.valueOf(cal.get(Calendar.YEAR)));
         return cal.get(Calendar.YEAR);
     }
 
@@ -299,23 +337,30 @@ public class OngoingFragment extends Fragment {
             resultList = new Movie[ar.length()];
             for (int i = 0; i < ar.length(); i++) {
                 JSONObject jsonobject = ar.getJSONObject(i);
+                Movie movie = new Movie();
+                // if (getYear(stringToDate(jsonobject.getString(RELEASE_DATE))) >= getYear(stringToDate("2017-08-08"))) {
 
-
-                if (getYear(stringToDate(jsonobject.getString(RELEASE_DATE))) >= getYear(stringToDate("2017-08-08"))) {
-                    Movie movie = new Movie();
-                    movie.title = jsonobject.getString(MOVIEDB_TITLE);
-                    movie.user_rating = jsonobject.getString(USER_RATING);
-                    movie.language = jsonobject.getString(LANG);
-                    movie.poster_path = IMAGE_URL + jsonobject.getString(MOVIEDB_POSTER_PATH);
-                    resultList[i] = movie;
-                    moviesList.add(movie);
-                }
+                movie.title = jsonobject.getString(MOVIEDB_TITLE);
+                movie.user_rating = jsonobject.getString(USER_RATING);
+                movie.language = jsonobject.getString(LANG);
+                movie.poster_path = IMAGE_URL + jsonobject.getString(MOVIEDB_POSTER_PATH);
+                movie.plot = jsonobject.getString(OVERVIEW);
+                if (!jsonobject.getString(image_path).endsWith(".jpg")) {
+                    movie.thumbnail = movie.poster_path;
+                } else
+                    movie.thumbnail = (IMAGE_URL + jsonobject.getString(image_path));
+                movie.release_date = jsonobject.getString(RELEASE_DATE);
+                movie.movie_id = jsonobject.getString(ID);
+                resultList[i] = movie;
+                moviesList.add(movie);
+               /* }
                 else
                 {
                     Log.w(TAG, "no prob");
+                    Log.w(TAG, jsonobject.getString(RELEASE_DATE));
                     continue;
 
-                }
+                }*/
 
             }
         } catch (JSONException e) {
