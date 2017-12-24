@@ -26,33 +26,17 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+       // getSupportFragmentManager().beginTransaction().replace(R.id.movies_fragment, new OngoingFragment()).commit();
+       // getSupportFragmentManager().beginTransaction().replace(R.id.movies_fragment, new RetroFragment()).commit();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager());
+        SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(this,getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(true, new AccordionTransformer());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-
-        /*TextView ongoing= (TextView)findViewById(R.id.ongoing);
-        ongoing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DashboardActivity.this,OngoingActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        TextView retro = (TextView)findViewById(R.id.retro);
-        retro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DashboardActivity.this,RetroActivity.class);
-                startActivity(intent);
-            }
-        });*/
 
     }
 

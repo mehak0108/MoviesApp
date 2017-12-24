@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class Viewholder {
 
    // public final ListView review_list ;
-   //public final ListView trailer_list ;
+    public final ImageView trailer_list ;
     public final ImageView imageView ;
     public final TextView plotView;
     public final TextView titleView;
@@ -19,7 +19,7 @@ public class Viewholder {
 
     public Viewholder(View rootView){
         //review_list=(ListView)rootView.findViewById(R.id.reviews_list);
-        //trailer_list=(ListView) rootView.findViewById(R.id.trailer_list);
+        trailer_list=(ImageView) rootView.findViewById(R.id.play);
         imageView = (ImageView) rootView.findViewById(R.id.thumbnail);
         titleView=(TextView) rootView.findViewById(R.id.title_textview);
         plotView=(TextView) rootView.findViewById(R.id.plot_textview);

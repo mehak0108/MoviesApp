@@ -46,8 +46,10 @@ public class OngoingFragment extends Fragment {
     private String BASE_URL = "http://api.themoviedb.org/3/discover/movie";
     ArrayList<Movie> moviesList;
     MovieAdapter adapter;
-    private String title;
+    private String title = "";
     private int page;
+
+
 
     public static OngoingFragment newInstance(int page, String title) {
         OngoingFragment var = new OngoingFragment();
@@ -65,8 +67,8 @@ public class OngoingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");
+        /*page = getArguments().getInt("someInt", 0);
+        title = getArguments().getString("someTitle");*/
     }
 
     @Override
@@ -98,6 +100,7 @@ public class OngoingFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         //onCreate();
+       // onCreateView();
 
     }
 

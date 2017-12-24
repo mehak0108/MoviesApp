@@ -7,8 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:name="com.example.mehak.movies.OngoingFragment"
-    tools:context="com.example.mehak.movies.OngoingActivity">
+    android:name="com.example.mehak.movies.OngoingFragment">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"

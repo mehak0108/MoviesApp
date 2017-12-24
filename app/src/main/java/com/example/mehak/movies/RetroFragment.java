@@ -30,8 +30,8 @@ public class RetroFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");
+       /* page = getArguments().getInt("someInt", 0);
+        title = getArguments().getString("someTitle");*/
     }
 
     @Override

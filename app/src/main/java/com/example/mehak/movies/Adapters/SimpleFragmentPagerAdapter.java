@@ -1,9 +1,13 @@
-package com.example.mehak.movies;
+package com.example.mehak.movies.Adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.example.mehak.movies.OngoingFragment;
+import com.example.mehak.movies.R;
+import com.example.mehak.movies.RetroFragment;
 
 public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -11,7 +15,7 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private static int NUM_ITEMS = 2;
 
-    public SimpleFragmentPagerAdapter(Context context,FragmentManager fm){
+    public SimpleFragmentPagerAdapter(Context context, FragmentManager fm){
         super(fm);
         mContext = context;
     }
