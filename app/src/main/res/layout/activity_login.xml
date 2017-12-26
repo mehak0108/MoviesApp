@@ -52,7 +52,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/btn"
+                android:id="@+id/login_btn"
                 android:layout_marginTop="28dp"
                 style="@style/margin"
                 android:layout_gravity="center_horizontal"
@@ -64,7 +64,7 @@
 
             <LinearLayout
                 android:id="@+id/or"
-                android:layout_below="@id/btn"
+                android:layout_below="@id/login_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">

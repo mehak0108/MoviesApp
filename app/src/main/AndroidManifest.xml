@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,31 +32,18 @@
         <activity
             android:name=".SignupActivity"
             android:label="SignUp"
-            android:parentActivityName=".LoginActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity" />
+                android:value=".MainActivity" />
         </activity>
 
-        <activity android:name=".DashboardActivity"
-            android:label="Dashboard"
+        <activity android:name=".MainActivity"
+            android:label="Movies"
             android:launchMode="singleTop">
         </activity>
 
-        <activity android:name=".OngoingActivity"
-            android:label="Ongoing">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
 
-        </activity>
-
-        <activity android:name=".RetroActivity"
-            android:label="Retro">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity"/>
-        </activity>
 
         <activity android:name=".SettingsActivity"
             android:label="Settings"

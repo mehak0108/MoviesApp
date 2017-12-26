@@ -14,11 +14,14 @@ import android.view.MenuItem;
 
 import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
 import com.example.mehak.movies.Classes.Movie;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 //import com.example.mehak.movies.Settings.SettingsActivity;
 
 
 public class DashboardActivity extends AppCompatActivity implements OngoingFragment.Callback{
 
+    private FirebaseAuth mAuth;
     public static String mSortBy;
 
 
@@ -26,18 +29,41 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        mAuth = FirebaseAuth.getInstance();
        // getSupportFragmentManager().beginTransaction().replace(R.id.movies_fragment, new OngoingFragment()).commit();
        // getSupportFragmentManager().beginTransaction().replace(R.id.movies_fragment, new RetroFragment()).commit();
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(this,getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.setPageTransformer(true, new AccordionTransformer());
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
 
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //updateUI(currentUser);
+        if (currentUser == null){
+            sendToStart();
+        }
+        else{
+            ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+            SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(this,getSupportFragmentManager());
+            viewPager.setAdapter(adapter);
+            viewPager.setPageTransformer(true, new AccordionTransformer());
+
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+            tabLayout.setupWithViewPager(viewPager);
+        }
+    }
+
+    private void sendToStart(){
+
+        Intent startIntent = new Intent(DashboardActivity.this, MainActivity.class);
+        startActivity(startIntent);
+        finish();
     }
 
     @Override
@@ -70,7 +96,11 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
             startActivity(intent);
 
         }
-        return super.onOptionsItemSelected(item);
+        if (menuItemThatWasSelected == R.id.logout_btn){
+            FirebaseAuth.getInstance().signOut();
+            sendToStart();
+        }
+        return true;
     }
 
     @Override

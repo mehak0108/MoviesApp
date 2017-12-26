@@ -17,20 +17,6 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     }
     @Override
     public Fragment getItem(int position) {
-       /* switch (position){
-            case 0:
-                return OngoingFragment.newInstance(0, "Ongoing");
-            case 1:
-                return RetroFragment.newInstance(1, "Retro");
-            default:
-                return null;
-        }*/
-       /*switch (position){
-           case 0:
-               return new OngoingFragment();
-           case 1:
-               return new RetroFragment();
-       }*/
 
         if (position == 0) {
             return new OngoingFragment();
