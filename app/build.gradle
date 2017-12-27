@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.mehak.movies"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -40,6 +40,8 @@ dependencies {
 
     compile 'com.google.firebase:firebase-auth:11.0.4'
     compile 'com.google.android.gms:play-services-auth:11.0.4'
+
+    implementation 'com.facebook.android:facebook-login:[4,5)'
 
 
 

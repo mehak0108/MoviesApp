@@ -2,18 +2,30 @@ package com.example.mehak.movies;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -25,8 +37,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,6 +59,10 @@ public class LoginActivity extends AppCompatActivity {
     private final static int RC_SIGN_IN = 2;
     GoogleApiClient mGoogleApiClient;
 
+    //Facebook login
+    private CallbackManager mCallbackManager;
+    private ImageView mFbButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginProgress = new ProgressDialog(this);
 
+        //======================================================================================
 
         mLoginEmail = (TextInputLayout) findViewById(R.id.usernameWrapper);
         mLoginPassword = (TextInputLayout) findViewById(R.id.passwordWrapper);
@@ -75,8 +98,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
-
         TextView sign = (TextView)findViewById(R.id.sign_up);
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +106,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //===========================================================================================
 
         //google sign in
 
@@ -114,10 +137,113 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+        //==================================================================================
 
+
+        //Facebook Login
+
+        mCallbackManager = CallbackManager.Factory.create();
+        mFbButton = (ImageView) findViewById(R.id.logo_fb);
+        mFbButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mFbButton.setEnabled(false);
+                mLoginProgress.setTitle("Loging in");
+                mLoginProgress.setMessage("Please wait while we check your credentials");
+                mLoginProgress.setCanceledOnTouchOutside(false);
+                mLoginProgress.show();
+
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+                LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Log.d("ok", "facebook:onSuccess:" + loginResult);
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d("ok", "facebook:onCancel");
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.d("ok", "facebook:onError", error);
+
+                    }
+                });
+            }
+        });
+
+       /* mCallbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = (LoginButton)findViewById(R.id.fb_button);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("ok", "facebook:onSuccess:" + loginResult);
+                mLoginProgress.setTitle("Loging in");
+                mLoginProgress.setMessage("Please wait while we check your credentials");
+                mLoginProgress.setCanceledOnTouchOutside(false);
+                mLoginProgress.show();
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("ok", "facebook:onCancel");
+                // ...
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("ok", "facebook:onError", error);
+                // ...
+            }
+        });*/
 
 
     }
+
+    //---------------------------------------------------------------------------------------------
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d("ok", "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("ok", "signInWithCredential:success");
+
+
+                            mLoginProgress.dismiss();
+                            Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+                            startActivity(intent);
+                            finish();
+
+
+                            //mFbButton.setenabled(true);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            mLoginProgress.hide();
+                            Log.w("ok", "signInWithCredential:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+                            //mFbButton.setenabled(true);
+                        }
+                    }
+                });
+    }
+
+
+    //=======================================================================================
 
     private void signIn() {
         mLoginProgress.setTitle("Loging in");
@@ -132,6 +258,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
 
@@ -144,6 +271,10 @@ public class LoginActivity extends AppCompatActivity {
             {
                 Toast.makeText(LoginActivity.this,"Auth went wrong!", Toast.LENGTH_SHORT).show();
             }
+        }
+        else
+        {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -180,6 +311,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    //========================================================================================
+
 
 
     private void loginUser(String email, String password) {
@@ -210,4 +343,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    //===============================================================================================
 }

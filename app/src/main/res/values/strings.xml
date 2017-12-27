@@ -26,4 +26,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
+
+    <string name="facebook_app_id">554760991529799</string>
+    <string name="fb_login_protocol_scheme">fb554760991529799</string>
+    <string name="or_connect_with">or connect with</string>
+
+
 </resources>
