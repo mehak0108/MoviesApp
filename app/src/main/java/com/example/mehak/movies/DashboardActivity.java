@@ -16,7 +16,6 @@ import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
 import com.example.mehak.movies.Classes.Movie;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-//import com.example.mehak.movies.Settings.SettingsActivity;
 
 
 public class DashboardActivity extends AppCompatActivity implements OngoingFragment.Callback{
