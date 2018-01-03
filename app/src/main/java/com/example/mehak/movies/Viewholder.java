@@ -1,6 +1,7 @@
 package com.example.mehak.movies;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -15,6 +16,8 @@ public class Viewholder {
     public final TextView titleView;
     public final RatingBar rating;
     public final TextView dateView;
+    //public final EditText reviewPost;
+    //public final ImageView sendImage;
 
 
     public Viewholder(View rootView){
@@ -25,6 +28,8 @@ public class Viewholder {
         plotView=(TextView) rootView.findViewById(R.id.plot_textview);
         rating=(RatingBar) rootView.findViewById(R.id.ratingbar);
         dateView=(TextView) rootView.findViewById(R.id.r_date_textview);
+        //reviewPost = (EditText)rootView.findViewById(R.id.postSection);
+        //sendImage= (ImageView)rootView.findViewById(R.id.sendBtn);
 
     }
 }

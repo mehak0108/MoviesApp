@@ -5,16 +5,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.mehak.movies.Classes.Movie;
 import com.example.mehak.movies.Classes.MovieTrailer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -43,6 +51,17 @@ public class DetailFragment extends Fragment {
 
     private Movie movie;
     String[] trailer_key;
+    String s;
+
+    //String userId;
+    //public final Viewholder viewHolder;
+
+
+    FirebaseAuth auth;
+    FirebaseUser user;
+    private DatabaseReference mDatabase;
+    ImageView sendText;
+    EditText reviewPost;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -57,24 +76,30 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        //userId = getActivity().getIntent().getStringExtra("UserId");
+
         Bundle args = getArguments();
-        if (savedInstanceState == null || !savedInstanceState.containsKey("Trailers")){
+        if (savedInstanceState == null || !savedInstanceState.containsKey("Trailers")) {
             trailers = new ArrayList<>();
-        }
-        else
-        {
+        } else {
             Log.v("DETAIL ACTIVITY", "bundle received.");
 
             trailers = savedInstanceState.getParcelableArrayList("Trailers");
         }
-        if (args!=null){
+        if (args != null) {
             movie = args.getParcelable(MOVIE_DETAIL);
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Viewholder viewHolder = new Viewholder(rootView);
             rootView.setTag(viewHolder);
             viewHolder = (Viewholder) rootView.getTag();
             movie_id = movie.movie_id;
-           // final FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.fab);
+            // final FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.fab);
 
             if (savedInstanceState == null) {
                 getTrailer();
@@ -82,10 +107,15 @@ public class DetailFragment extends Fragment {
             viewHolder.imageView.setAdjustViewBounds(true);
             Picasso.with(getActivity()).load(movie.thumbnail).resize(780, 450).into(viewHolder.imageView);
             viewHolder.titleView.setText(movie.title);
-           // if (!(movie.plot).equals(""))
-                viewHolder.plotView.setText(movie.plot);
+            // if (!(movie.plot).equals(""))
+            viewHolder.plotView.setText(movie.plot);
             viewHolder.rating.setRating((Float.parseFloat(movie.user_rating)) / 2);
             viewHolder.dateView.setText(movie.release_date);
+            //final String s = viewHolder.reviewPost.getText().toString();
+            sendText = (ImageView) rootView.findViewById(R.id.sendBtn);
+            reviewPost = (EditText) rootView.findViewById(R.id.postSection);
+            // final String s = reviewPost.getText().toString();
+            reviewPost.setFocusable(true);
 
             viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -93,8 +123,7 @@ public class DetailFragment extends Fragment {
                     if (trailer_key != null) {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtube.com/watch?v=" + trailer_key[0]));
                         startActivity(intent);
-                    }
-                    else {
+                    } else {
 
                         Toast.makeText(getContext(), "Sorry trailer not available!", Toast.LENGTH_SHORT).show();
                     }
@@ -102,10 +131,24 @@ public class DetailFragment extends Fragment {
                 }
             });
 
+            sendText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    s = reviewPost.getText().toString();
+                    if (s.length() == 0) {
+                        Toast.makeText(getContext(), "Please write a review", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        Log.v("ok", s);
+                        mDatabase.child(movie_id).child(user.getUid()).setValue(s);
+
+                    }
+                }
+            });
+
 
             return rootView;
-        }
-        else
+        } else
             return null;
     }
 
@@ -115,15 +158,14 @@ public class DetailFragment extends Fragment {
         outState.putParcelableArrayList("Trailers", trailers);
     }
 
-    public void getTrailer(){
-        FetchTrailerTask movieTask=new FetchTrailerTask();
+    public void getTrailer() {
+        FetchTrailerTask movieTask = new FetchTrailerTask();
         movieTask.execute();
     }
 
-    public class FetchTrailerTask extends AsyncTask<String, Void, String[]>{
+    public class FetchTrailerTask extends AsyncTask<String, Void, String[]> {
 
         String json_str = null;
-
 
 
         @Override
@@ -191,7 +233,7 @@ public class DetailFragment extends Fragment {
         private String[] getTrailerData(String str) throws JSONException {
             final String MOVIEDB_RESULT = "results";
             final String MOVIEDB_KEY = "key";
-            JSONObject jsonObject=new JSONObject(str);
+            JSONObject jsonObject = new JSONObject(str);
             JSONArray movieArray = jsonObject.getJSONArray(MOVIEDB_RESULT);
             Log.v("no.", String.valueOf(movieArray.length()));
             if (movieArray.length() > 0) {
@@ -199,14 +241,11 @@ public class DetailFragment extends Fragment {
                 JSONObject movie_obj = movieArray.getJSONObject(0);
                 MovieTrailer trailer = new MovieTrailer();
                 trailer.key = movie_obj.getString(MOVIEDB_KEY);
-               // Log.v("key", trailer.key);
+                // Log.v("key", trailer.key);
                 resultList[0] = trailer.key;
-               // Log.v("ok", "printed");
+                // Log.v("ok", "printed");
                 return resultList;
-            }
-
-            else
-            {
+            } else {
 
                 return null;
             }

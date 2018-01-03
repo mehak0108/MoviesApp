@@ -17,6 +17,10 @@ import android.widget.ListView;
 
 import com.example.mehak.movies.Adapters.MovieAdapter;
 import com.example.mehak.movies.Classes.Movie;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,19 +50,23 @@ public class OngoingFragment extends Fragment {
     private String BASE_URL = "http://api.themoviedb.org/3/discover/movie";
     ArrayList<Movie> moviesList;
     MovieAdapter adapter;
-    private String title = "";
-    private int page;
+    Movie movie;
+
+    private DatabaseReference mDatabase;
+   /* public FirebaseAuth auth;
+    public String userId;*/
 
 
 
-    public static OngoingFragment newInstance(int page, String title) {
+
+    /*public static OngoingFragment newInstance(int page, String title) {
         OngoingFragment var = new OngoingFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
         var.setArguments(args);
         return var;
-    }
+    }*/
 
     public interface Callback {
         public void onItemSelected(Movie movie);
@@ -67,8 +75,7 @@ public class OngoingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        /*page = getArguments().getInt("someInt", 0);
-        title = getArguments().getString("someTitle");*/
+
     }
 
     @Override
@@ -99,8 +106,6 @@ public class OngoingFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //onCreate();
-       // onCreateView();
 
     }
 
@@ -136,6 +141,11 @@ public class OngoingFragment extends Fragment {
             adapter = new MovieAdapter(getActivity(), moviesList);
 
         }
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+       // auth = FirebaseAuth.getInstance();
+        /*FirebaseUser currentUser = auth.getCurrentUser();
+        userId = currentUser.getUid();*/
 
         View rootView = inflater.inflate(R.layout.movie_list, container, false);
         ListView lv = (ListView) rootView.findViewById(R.id.list);
@@ -175,6 +185,7 @@ public class OngoingFragment extends Fragment {
         moviesList.clear();
         FetchMovieTask movieTask = new FetchMovieTask();
         movieTask.execute(sort_by);
+
 
     }
 
@@ -340,7 +351,7 @@ public class OngoingFragment extends Fragment {
             resultList = new Movie[ar.length()];
             for (int i = 0; i < ar.length(); i++) {
                 JSONObject jsonobject = ar.getJSONObject(i);
-                Movie movie = new Movie();
+                movie = new Movie();
                 // if (getYear(stringToDate(jsonobject.getString(RELEASE_DATE))) >= getYear(stringToDate("2017-08-08"))) {
 
                 movie.title = jsonobject.getString(MOVIEDB_TITLE);
@@ -354,6 +365,12 @@ public class OngoingFragment extends Fragment {
                     movie.thumbnail = (IMAGE_URL + jsonobject.getString(image_path));
                 movie.release_date = jsonobject.getString(RELEASE_DATE);
                 movie.movie_id = jsonobject.getString(ID);
+
+                sendToFirebaseData(movie.title, movie.movie_id);
+
+
+
+
                 resultList[i] = movie;
                 moviesList.add(movie);
                /* }
@@ -370,6 +387,16 @@ public class OngoingFragment extends Fragment {
             e.printStackTrace();
         }
         return resultList;
+
+    }
+
+
+
+    private void sendToFirebaseData(String name, String id){
+
+        //Log.v("no.","ok");
+         mDatabase.child(id).setValue(name);
+
 
     }
 

@@ -30,6 +30,10 @@
     <string name="facebook_app_id">554760991529799</string>
     <string name="fb_login_protocol_scheme">fb554760991529799</string>
     <string name="or_connect_with">or connect with</string>
+    <string name="title">title</string>
+    <string name="plot">Plot:</string>
+    <string name="overview">Overview</string>
+    <string name="reviews">Reviews:</string>
 
 
 </resources>

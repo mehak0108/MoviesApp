@@ -20,7 +20,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity implements OngoingFragment.Callback{
 
-    private FirebaseAuth mAuth;
+    public FirebaseAuth auth;
+    //public String userId;
+
+
     public static String mSortBy;
 
 
@@ -29,7 +32,8 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        mAuth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
+
        // getSupportFragmentManager().beginTransaction().replace(R.id.movies_fragment, new OngoingFragment()).commit();
        // getSupportFragmentManager().beginTransaction().replace(R.id.movies_fragment, new RetroFragment()).commit();
 
@@ -42,12 +46,13 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = auth.getCurrentUser();
         //updateUI(currentUser);
         if (currentUser == null){
             sendToStart();
         }
         else{
+            //userId = currentUser.getUid();
             ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
             SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(this,getSupportFragmentManager());
             viewPager.setAdapter(adapter);
@@ -103,7 +108,7 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
     }
 
     @Override
-    public void onItemSelected(Movie movie) {
+    public void onItemSelected(Movie movie, String a) {
 
         /*if(mtwoPane){
             //In two pane mode, show the detail view in this activity by
@@ -117,8 +122,11 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
                     .replace(R.id.details_container,fragment,DETAILFRAGMENT_TAG)
                     .commit();*/
        // }else {
+
+           // a = userId;
             Intent intent = new Intent(this,DetailActivity.class);
             intent.putExtra("MOVIE", movie);
+            //intent.putExtra("UserId", a);
             startActivity(intent);
        // }
     }
