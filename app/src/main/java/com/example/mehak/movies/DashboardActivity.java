@@ -108,7 +108,7 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
     }
 
     @Override
-    public void onItemSelected(Movie movie, String a) {
+    public void onItemSelected(Movie movie) {
 
         /*if(mtwoPane){
             //In two pane mode, show the detail view in this activity by
