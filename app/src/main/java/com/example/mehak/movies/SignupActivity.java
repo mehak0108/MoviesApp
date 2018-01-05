@@ -1,7 +1,10 @@
 package com.example.mehak.movies;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,25 +52,40 @@ public class SignupActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
 
-                String displayName = mDispalyName.getEditText().getText().toString().trim();
-                String email = mEmail.getEditText().getText().toString().trim();
-                String password = mPassword.getEditText().getText().toString().trim();
+                if (isNetworkAvailable()) {
 
-                if (!TextUtils.isEmpty(displayName) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
+                    String displayName = mDispalyName.getEditText().getText().toString().trim();
+                    String email = mEmail.getEditText().getText().toString().trim();
+                    String password = mPassword.getEditText().getText().toString().trim();
 
-                    mRegProgress.setTitle("Registering User");
-                    mRegProgress.setMessage("Please wait while your account is being registered");
-                    mRegProgress.setCanceledOnTouchOutside(false);
-                    mRegProgress.show();
+                    if (!TextUtils.isEmpty(displayName) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
 
-                    registerUser(displayName, email, password);
+                        mRegProgress.setTitle("Registering User");
+                        mRegProgress.setMessage("Please wait while your account is being registered");
+                        mRegProgress.setCanceledOnTouchOutside(false);
+                        mRegProgress.show();
+
+                        registerUser(displayName, email, password);
+                    }
+
+
                 }
-
-
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
 
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void registerUser(String displayName, String email, String password) {

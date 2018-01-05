@@ -1,7 +1,10 @@
 package com.example.mehak.movies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -10,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
@@ -47,7 +51,7 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = auth.getCurrentUser();
-        //updateUI(currentUser);
+
         if (currentUser == null){
             sendToStart();
         }
@@ -92,6 +96,13 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
 
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuItemThatWasSelected = item.getItemId();
@@ -100,9 +111,14 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
             startActivity(intent);
 
         }
-        if (menuItemThatWasSelected == R.id.logout_btn){
-            FirebaseAuth.getInstance().signOut();
-            sendToStart();
+        if (menuItemThatWasSelected == R.id.logout_btn) {
+
+            if (isNetworkAvailable()) {
+                FirebaseAuth.getInstance().signOut();
+                sendToStart();
+            } else {
+                Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
+            }
         }
         return true;
     }
@@ -133,7 +149,7 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);

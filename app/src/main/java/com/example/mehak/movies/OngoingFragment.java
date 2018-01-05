@@ -3,6 +3,8 @@ package com.example.mehak.movies;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.mehak.movies.Adapters.MovieAdapter;
 import com.example.mehak.movies.Classes.Movie;
@@ -161,30 +164,43 @@ public class OngoingFragment extends Fragment {
         return rootView;
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(getContext().CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     public void onPreferenceChanged(String sort_by) {
         Log.v(TAG, "PREFERENCE CHANGED");
         moviesList.clear();
-        FetchMovieTask movieTask = new FetchMovieTask();
-        movieTask.execute(sort_by);
+
         /*if(sort_by.equals(getString(R.string.favorites))){
             fetchFavorites();
         }
-        else{
+        else{*/
             if(isNetworkAvailable()) {
 
+                FetchMovieTask movieTask = new FetchMovieTask();
+                movieTask.execute(sort_by);
             }
             else
                 Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection",
                         Toast.LENGTH_LONG).show();
-        }*/
+
     }
 
     public void updateMovie() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sort_by = prefs.getString(getString(R.string.pref_general_key), getString(R.string.popularity));
-        moviesList.clear();
-        FetchMovieTask movieTask = new FetchMovieTask();
-        movieTask.execute(sort_by);
+        if (isNetworkAvailable()) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String sort_by = prefs.getString(getString(R.string.pref_general_key), getString(R.string.popularity));
+            moviesList.clear();
+            FetchMovieTask movieTask = new FetchMovieTask();
+            movieTask.execute(sort_by);
+        }
+        else {
+            Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
+        }
 
 
     }

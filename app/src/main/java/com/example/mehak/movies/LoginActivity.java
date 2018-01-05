@@ -1,10 +1,13 @@
 package com.example.mehak.movies;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,6 +49,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import static java.security.AccessController.getContext;
+
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout mLoginEmail;
@@ -85,14 +90,19 @@ public class LoginActivity extends AppCompatActivity {
                 String email = mLoginEmail.getEditText().getText().toString().trim();
                 String password = mLoginPassword.getEditText().getText().toString().trim();
 
-                if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
+                if (isNetworkAvailable()) {
+                    if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
 
-                    mLoginProgress.setTitle("Loging in");
-                    mLoginProgress.setMessage("Please wait while we check your credentials");
-                    mLoginProgress.setCanceledOnTouchOutside(false);
-                    mLoginProgress.show();
+                        mLoginProgress.setTitle("Loging in");
+                        mLoginProgress.setMessage("Please wait while we check your credentials");
+                        mLoginProgress.setCanceledOnTouchOutside(false);
+                        mLoginProgress.show();
 
-                    loginUser(email, password);
+                        loginUser(email, password);
+                    }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -116,7 +126,13 @@ public class LoginActivity extends AppCompatActivity {
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn();
+                if (isNetworkAvailable()) {
+
+                    signIn();
+                }else
+                {
+                    Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -148,32 +164,39 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                mFbButton.setEnabled(false);
-                mLoginProgress.setTitle("Loging in");
-                mLoginProgress.setMessage("Please wait while we check your credentials");
-                mLoginProgress.setCanceledOnTouchOutside(false);
-                mLoginProgress.show();
+                if (isNetworkAvailable()) {
 
-                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
-                LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Log.d("ok", "facebook:onSuccess:" + loginResult);
-                        handleFacebookAccessToken(loginResult.getAccessToken());
-                    }
+                    mFbButton.setEnabled(false);
+                    mLoginProgress.setTitle("Loging in");
+                    mLoginProgress.setMessage("Please wait while we check your credentials");
+                    mLoginProgress.setCanceledOnTouchOutside(false);
+                    mLoginProgress.show();
 
-                    @Override
-                    public void onCancel() {
-                        Log.d("ok", "facebook:onCancel");
+                    LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+                    LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            Log.d("ok", "facebook:onSuccess:" + loginResult);
+                            handleFacebookAccessToken(loginResult.getAccessToken());
+                        }
 
-                    }
+                        @Override
+                        public void onCancel() {
+                            Log.d("ok", "facebook:onCancel");
 
-                    @Override
-                    public void onError(FacebookException error) {
-                        Log.d("ok", "facebook:onError", error);
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onError(FacebookException error) {
+                            Log.d("ok", "facebook:onError", error);
+
+                        }
+                    });
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -205,6 +228,13 @@ public class LoginActivity extends AppCompatActivity {
         });*/
 
 
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     //---------------------------------------------------------------------------------------------
@@ -256,26 +286,25 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+            super.onActivityResult(requestCode, resultCode, data);
 
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+            if (requestCode == RC_SIGN_IN) {
 
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()){
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                if (result.isSuccess()) {
+                    GoogleSignInAccount account = result.getSignInAccount();
+                    firebaseAuthWithGoogle(account);
 
-            }else
-            {
-                Toast.makeText(LoginActivity.this,"Auth went wrong!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Auth went wrong!", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                mCallbackManager.onActivityResult(requestCode, resultCode, data);
             }
-        }
-        else
-        {
-            mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        }
+
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
