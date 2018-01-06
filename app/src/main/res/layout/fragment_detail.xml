@@ -13,6 +13,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp">
 
+        <!-- Thumbnail-->
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_marginTop="10dp"
@@ -21,6 +22,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/inception" />
 
+        <!-- Play Image-->
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,8 +35,7 @@
             android:src="@drawable/youtubeplay"
             android:scaleType="centerInside" />
 
-
-
+        <!-- Title-->
         <TextView
             android:id="@+id/title_textview"
             android:fontFamily="sans-serif"
@@ -46,6 +47,7 @@
             android:layout_height="wrap_content"
             android:textSize="26sp" />
 
+        <!-- Release date-->
         <TextView
             android:id="@+id/r_date_textview"
             android:text="2017-08-01"
@@ -53,6 +55,8 @@
             android:layout_below="@id/title_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <!--Rating-->
         <TextView
             android:id="@+id/user_rating"
             android:layout_width="wrap_content"
@@ -61,6 +65,8 @@
             android:layout_below="@id/r_date_textview"
             android:text="@string/rating"
             android:textColor="@android:color/black"/>
+
+        <!-- Rating bar-->
         <RatingBar
             android:id="@+id/ratingbar"
             android:layout_toRightOf="@id/user_rating"
@@ -73,6 +79,7 @@
             android:layout_below="@+id/r_date_textview"
             android:layout_marginLeft="15dp"/>
 
+        <!--Plot-->
         <TextView
             android:layout_below="@id/user_rating"
             android:layout_width="wrap_content"
@@ -96,6 +103,7 @@
             android:textIsSelectable="true"
             android:text="@string/overview"/>
 
+        <!-- Reviews title-->
         <TextView
             android:layout_below="@id/plot_textview"
             android:layout_width="wrap_content"
@@ -107,9 +115,7 @@
             android:textStyle="bold"
             android:layout_marginTop="12dp"/>
 
-
-
-
+        <!-- Write a review-->
         <EditText
             android:id="@+id/postSection"
             android:layout_below="@id/review"
@@ -122,9 +128,9 @@
             android:focusable="true"
             android:isScrollContainer="true"
             android:layout_width="230dp"
-            android:scrollbars="vertical"
-            />
+            android:scrollbars="vertical" />
 
+        <!-- Send image-->
         <ImageView
             android:id="@+id/sendBtn"
             android:layout_width="50dp"
@@ -133,9 +139,5 @@
             android:src="@drawable/send"
             android:layout_below="@id/review"
             android:layout_toRightOf="@id/postSection"/>
-
-
-
     </RelativeLayout>
-
 </ScrollView>

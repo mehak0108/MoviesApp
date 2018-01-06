@@ -6,17 +6,28 @@
     android:layout_height="match_parent"
     tools:context="com.example.mehak.movies.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
+        <!-- Intro Pic-->
+        <ImageView
+            android:id="@+id/picIntro"
+            android:contentDescription="@string/this_is_the_intro_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/intro_pic" />
+
+        <!-- Get started -->
         <Button
             android:id="@+id/button_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
             android:text="Get Started"
-            android:textSize="20sp"/>
-
-    </LinearLayout>
-
+            android:textSize="20sp" />
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

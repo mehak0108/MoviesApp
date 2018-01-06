@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import com.example.mehak.movies.Classes.Movie;
 import com.example.mehak.movies.Classes.MovieTrailer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +39,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static android.content.ContentValues.TAG;
 
@@ -52,6 +56,7 @@ public class DetailFragment extends Fragment {
     private Movie movie;
     String[] trailer_key;
     String s;
+
 
     //String userId;
     //public final Viewholder viewHolder;
@@ -70,18 +75,20 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
         //userId = getActivity().getIntent().getStringExtra("UserId");
 
         Bundle args = getArguments();
@@ -117,6 +124,8 @@ public class DetailFragment extends Fragment {
             // final String s = reviewPost.getText().toString();
             reviewPost.setFocusable(true);
 
+
+
             viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -131,18 +140,33 @@ public class DetailFragment extends Fragment {
                 }
             });
 
+
             sendText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     s = reviewPost.getText().toString();
-                    if (s.length() == 0) {
+
+                    if (s.length() == 0){
                         Toast.makeText(getContext(), "Please write a review", Toast.LENGTH_SHORT).show();
-                    } else {
-
-                        Log.v("ok", s);
-                        mDatabase.child(movie_id).child(user.getUid()).setValue(s);
-
                     }
+                    else {
+                        mDatabase.child(movie_id).child(user.getUid()).setValue(s).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getContext(), "Successfully posted!", Toast.LENGTH_SHORT).show();
+                                    reviewPost.getText().clear();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getContext(), "error",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+
                 }
             });
 

@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Movies</string>
-    <string name="ques">Dont have an account?</string>
+    <string name="app_name">Scene it?</string>
+    <string name="ques">Don\'t have an account?</string>
     <string name="signup">SignUp</string>
     <string name="api_key">7139ff052030e32d5a0620148625fcbe</string>
     <string name="pref_general_key">sort_by</string>
@@ -22,18 +22,21 @@
     <string name="rating">Rating:      </string>
     <string name="pref_general_summary">Sort the movies by choosing a category</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
 
     <string name="facebook_app_id">554760991529799</string>
     <string name="fb_login_protocol_scheme">fb554760991529799</string>
+
     <string name="or_connect_with">or connect with</string>
     <string name="title">title</string>
     <string name="plot">Plot:</string>
     <string name="overview">Overview</string>
     <string name="reviews">Reviews:</string>
-
-
+    <string name="this_is_the_intro_pic">This is the intro pic</string>
+    <string name="movie_name">Movie Name</string>
+    <string name="rate">Rate</string>
+    <string name="language">Language</string>
 </resources>

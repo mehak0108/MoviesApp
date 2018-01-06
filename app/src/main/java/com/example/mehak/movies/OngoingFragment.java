@@ -55,12 +55,6 @@ public class OngoingFragment extends Fragment {
     MovieAdapter adapter;
     Movie movie;
 
-    private DatabaseReference mDatabase;
-   /* public FirebaseAuth auth;
-    public String userId;*/
-
-
-
 
     /*public static OngoingFragment newInstance(int page, String title) {
         OngoingFragment var = new OngoingFragment();
@@ -144,11 +138,6 @@ public class OngoingFragment extends Fragment {
             adapter = new MovieAdapter(getActivity(), moviesList);
 
         }
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-       // auth = FirebaseAuth.getInstance();
-        /*FirebaseUser currentUser = auth.getCurrentUser();
-        userId = currentUser.getUid();*/
 
         View rootView = inflater.inflate(R.layout.movie_list, container, false);
         ListView lv = (ListView) rootView.findViewById(R.id.list);
@@ -381,12 +370,6 @@ public class OngoingFragment extends Fragment {
                     movie.thumbnail = (IMAGE_URL + jsonobject.getString(image_path));
                 movie.release_date = jsonobject.getString(RELEASE_DATE);
                 movie.movie_id = jsonobject.getString(ID);
-
-                sendToFirebaseData(movie.title, movie.movie_id);
-
-
-
-
                 resultList[i] = movie;
                 moviesList.add(movie);
                /* }
@@ -405,16 +388,4 @@ public class OngoingFragment extends Fragment {
         return resultList;
 
     }
-
-
-
-    private void sendToFirebaseData(String name, String id){
-
-        //Log.v("no.","ok");
-         mDatabase.child(id).setValue(name);
-
-
-    }
-
-
 }

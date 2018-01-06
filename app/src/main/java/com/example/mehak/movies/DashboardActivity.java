@@ -20,6 +20,7 @@ import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
 import com.example.mehak.movies.Classes.Movie;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class DashboardActivity extends AppCompatActivity implements OngoingFragment.Callback{
@@ -35,6 +36,8 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         auth = FirebaseAuth.getInstance();
 

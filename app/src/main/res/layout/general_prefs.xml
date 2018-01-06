@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
     android:layout_width="match_parent">
     <ListPreference
         android:title="@string/pref_general_title"
@@ -7,6 +8,5 @@
         android:entries="@array/pref_general_entries"
         android:entryValues="@array/pref_general_entryValues"
         android:defaultValue="@string/popularity"
-        android:summary="@string/pref_general_summary"
-        />
+        android:summary="@string/pref_general_summary" />
 </PreferenceScreen>
