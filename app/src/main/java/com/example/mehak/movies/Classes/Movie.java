@@ -27,11 +27,6 @@ public class Movie implements Parcelable{
         language = in.readString();
     }
 
-    /*public Movie(String movie_name) {
-        title= movie_name;
-    }*/
-
-
 
     @Override
     public int describeContents() {

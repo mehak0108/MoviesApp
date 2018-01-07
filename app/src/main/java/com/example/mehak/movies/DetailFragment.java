@@ -12,20 +12,27 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.mehak.movies.Adapters.ReviewAdapter;
 import com.example.mehak.movies.Classes.Movie;
+import com.example.mehak.movies.Classes.MovieReview;
 import com.example.mehak.movies.Classes.MovieTrailer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -40,6 +47,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -52,15 +60,15 @@ public class DetailFragment extends Fragment {
     public static final String MOVIE_DETAIL = "movieDetails";
     private String movie_id;
     ArrayList<MovieTrailer> trailers;
+    ArrayList<MovieReview> reviews;
+    ReviewAdapter mReviewAdapter;
+    MovieReview movieReview;
 
     private Movie movie;
     String[] trailer_key;
     String s;
 
-
-    //String userId;
-    //public final Viewholder viewHolder;
-
+    Viewholder viewHolder;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -69,15 +77,13 @@ public class DetailFragment extends Fragment {
     EditText reviewPost;
 
     public DetailFragment() {
-        // Required empty public constructor
+
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -88,21 +94,20 @@ public class DetailFragment extends Fragment {
         user = auth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-        //userId = getActivity().getIntent().getStringExtra("UserId");
-
         Bundle args = getArguments();
-        if (savedInstanceState == null || !savedInstanceState.containsKey("Trailers")) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey("Trailers") || !savedInstanceState.containsKey("Reviews")) {
             trailers = new ArrayList<>();
+            reviews = new ArrayList<>();
         } else {
             Log.v("DETAIL ACTIVITY", "bundle received.");
 
             trailers = savedInstanceState.getParcelableArrayList("Trailers");
+            reviews = savedInstanceState.getParcelableArrayList("Reviews");
         }
         if (args != null) {
             movie = args.getParcelable(MOVIE_DETAIL);
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            Viewholder viewHolder = new Viewholder(rootView);
+            viewHolder = new Viewholder(rootView);
             rootView.setTag(viewHolder);
             viewHolder = (Viewholder) rootView.getTag();
             movie_id = movie.movie_id;
@@ -110,6 +115,7 @@ public class DetailFragment extends Fragment {
 
             if (savedInstanceState == null) {
                 getTrailer();
+                getReview();
             }
             viewHolder.imageView.setAdjustViewBounds(true);
             Picasso.with(getActivity()).load(movie.thumbnail).resize(780, 450).into(viewHolder.imageView);
@@ -118,13 +124,21 @@ public class DetailFragment extends Fragment {
             viewHolder.plotView.setText(movie.plot);
             viewHolder.rating.setRating((Float.parseFloat(movie.user_rating)) / 2);
             viewHolder.dateView.setText(movie.release_date);
-            //final String s = viewHolder.reviewPost.getText().toString();
+
+
+
             sendText = (ImageView) rootView.findViewById(R.id.sendBtn);
             reviewPost = (EditText) rootView.findViewById(R.id.postSection);
-            // final String s = reviewPost.getText().toString();
             reviewPost.setFocusable(true);
 
 
+            reviewPost.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
 
             viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -169,8 +183,6 @@ public class DetailFragment extends Fragment {
 
                 }
             });
-
-
             return rootView;
         } else
             return null;
@@ -179,9 +191,11 @@ public class DetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("Reviews", reviews);
         outState.putParcelableArrayList("Trailers", trailers);
     }
 
+    // Trailers
     public void getTrailer() {
         FetchTrailerTask movieTask = new FetchTrailerTask();
         movieTask.execute();
@@ -190,7 +204,6 @@ public class DetailFragment extends Fragment {
     public class FetchTrailerTask extends AsyncTask<String, Void, String[]> {
 
         String json_str = null;
-
 
         @Override
         protected String[] doInBackground(String... param) {
@@ -280,6 +293,97 @@ public class DetailFragment extends Fragment {
 
             Log.v("nothing", "nothing");
         }
+    }
+
+    //Reviews
+    public void getReview(){
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Log.v("Review", "1");
+
+        mDatabase.child(movie_id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.v("Review","2");
+
+                movieReview = new MovieReview();
+                Map<String, String > dataMap = new HashMap<String,String>();
+                dataMap.get(movieReview);
+
+                //reviews = new ArrayList<>();
+                for (DataSnapshot q : dataSnapshot.getChildren())
+                    reviews.add(q.getValue(MovieReview.class));
+
+                if (reviews.size()>0){
+                    mReviewAdapter = new ReviewAdapter(getActivity(), reviews);
+                    viewHolder.review_list.setAdapter(mReviewAdapter);
+                }
+
+                else {
+                    Toast.makeText(getActivity(),"No data",Toast.LENGTH_SHORT).show();
+                }
+               // questionIndex = 0;
+
+                //displayQuestion();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /*mDatabase.child(movie_id).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+               // Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : dataSnapshot.getChildren()){
+                    Log.v("Review","2");
+
+                    movieReview = new MovieReview();
+                    movieReview.userId = child.getKey();
+                    movieReview.reviewPosted = child.getValue(String.class);
+                    //MovieReview data = child.getValue(MovieReview.class);
+                    reviews.add(movieReview);
+
+                    mReviewAdapter.notifyDataSetChanged();
+                }
+
+                if (reviews.size()>0){
+                    mReviewAdapter = new ReviewAdapter(getActivity(), reviews);
+                    viewHolder.review_list.setAdapter(mReviewAdapter);
+                }
+
+                else {
+                    Toast.makeText(getActivity(),"No data",Toast.LENGTH_SHORT).show();
+                }
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
     }
 
 

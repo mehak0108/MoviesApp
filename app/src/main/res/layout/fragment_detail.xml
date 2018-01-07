@@ -115,10 +115,22 @@
             android:textStyle="bold"
             android:layout_marginTop="12dp"/>
 
+        <ListView
+            android:id="@+id/reviews_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/review"/>
+
+        <include layout="@layout/list_review"
+            android:id="@+id/reviewTaken"
+            android:layout_below="@id/review"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+
         <!-- Write a review-->
         <EditText
             android:id="@+id/postSection"
-            android:layout_below="@id/review"
+            android:layout_below="@id/reviewTaken"
             android:inputType="textMultiLine"
             android:lines="8"
             android:minLines="6"
@@ -137,7 +149,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="93dp"
             android:src="@drawable/send"
-            android:layout_below="@id/review"
+            android:layout_below="@id/reviewTaken"
             android:layout_toRightOf="@id/postSection"/>
     </RelativeLayout>
 </ScrollView>
