@@ -3,12 +3,20 @@ package com.example.mehak.movies.Classes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MovieReview implements Parcelable{
 
     public String userId;
     public String reviewPosted;
+ //   Map<String,String> map;
 
     public MovieReview(){}
+
+   /* public MovieReview(){
+        map = new HashMap<String, String>();
+    }*/
 
     public MovieReview(Parcel in){
         userId = in.readString();

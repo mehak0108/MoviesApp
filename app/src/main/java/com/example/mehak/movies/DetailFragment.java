@@ -47,6 +47,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
@@ -125,6 +126,8 @@ public class DetailFragment extends Fragment {
             viewHolder.rating.setRating((Float.parseFloat(movie.user_rating)) / 2);
             viewHolder.dateView.setText(movie.release_date);
 
+            mReviewAdapter = new ReviewAdapter(getActivity(), reviews);
+            viewHolder.review_list.setAdapter(mReviewAdapter);
 
 
             sendText = (ImageView) rootView.findViewById(R.id.sendBtn);
@@ -300,32 +303,47 @@ public class DetailFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         Log.v("Review", "1");
-
+        movieReview = new MovieReview();
         mDatabase.child(movie_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Log.v("Review","2");
 
-                movieReview = new MovieReview();
-                Map<String, String > dataMap = new HashMap<String,String>();
-                dataMap.get(movieReview);
+                for (DataSnapshot q : dataSnapshot.getChildren()) {
+                   Log.v("ok", q.getKey());
+                    movieReview.userId = q.getKey();
+                    movieReview.reviewPosted = q.getValue(String.class);
+                    Log.v("hmm", q.getValue(String.class));
+                    reviews.add(movieReview);
 
-                //reviews = new ArrayList<>();
-                for (DataSnapshot q : dataSnapshot.getChildren())
-                    reviews.add(q.getValue(MovieReview.class));
+                }
+
+
+                /*Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
+                reviews.clear();
+                HashMap<String,String> map = null;
+                while (items.hasNext()){
+                    DataSnapshot item = items.next();
+
+                    map = (HashMap<String , String>)item.getValue();
+                    map.put(movieReview.userId, item.getKey());
+                    map.put(movieReview.reviewPosted, item.getValue(String.class));
+
+
+                    Log.v("ok", item.getKey());
+                    Log.v("hmm", item.getValue(String.class));
+                }*/
 
                 if (reviews.size()>0){
-                    mReviewAdapter = new ReviewAdapter(getActivity(), reviews);
-                    viewHolder.review_list.setAdapter(mReviewAdapter);
+
+                    mReviewAdapter.notifyDataSetChanged();
                 }
 
                 else {
                     Toast.makeText(getActivity(),"No data",Toast.LENGTH_SHORT).show();
                 }
-               // questionIndex = 0;
 
-                //displayQuestion();
             }
 
             @Override
@@ -334,56 +352,7 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        /*mDatabase.child(movie_id).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-               // Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                for (DataSnapshot child : dataSnapshot.getChildren()){
-                    Log.v("Review","2");
-
-                    movieReview = new MovieReview();
-                    movieReview.userId = child.getKey();
-                    movieReview.reviewPosted = child.getValue(String.class);
-                    //MovieReview data = child.getValue(MovieReview.class);
-                    reviews.add(movieReview);
-
-                    mReviewAdapter.notifyDataSetChanged();
-                }
-
-                if (reviews.size()>0){
-                    mReviewAdapter = new ReviewAdapter(getActivity(), reviews);
-                    viewHolder.review_list.setAdapter(mReviewAdapter);
-                }
-
-                else {
-                    Toast.makeText(getActivity(),"No data",Toast.LENGTH_SHORT).show();
-                }
-
-
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
     }
 
 
