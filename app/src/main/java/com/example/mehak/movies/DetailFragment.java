@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.mehak.movies.Adapters.ReviewAdapter;
@@ -126,6 +127,7 @@ public class DetailFragment extends Fragment {
             viewHolder.rating.setRating((Float.parseFloat(movie.user_rating)) / 2);
             viewHolder.dateView.setText(movie.release_date);
 
+           // ListView lv = (ListView) rootView.findViewById(R.id.reviews_list);
             mReviewAdapter = new ReviewAdapter(getActivity(), reviews);
             viewHolder.review_list.setAdapter(mReviewAdapter);
 
@@ -134,6 +136,13 @@ public class DetailFragment extends Fragment {
             reviewPost = (EditText) rootView.findViewById(R.id.postSection);
             reviewPost.setFocusable(true);
 
+            viewHolder.review_list.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
 
             reviewPost.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -320,6 +329,7 @@ public class DetailFragment extends Fragment {
                 }
 
 
+
                 /*Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
                 reviews.clear();
                 HashMap<String,String> map = null;
@@ -336,14 +346,12 @@ public class DetailFragment extends Fragment {
                 }*/
 
                 if (reviews.size()>0){
-
                     mReviewAdapter.notifyDataSetChanged();
                 }
 
                 else {
                     Toast.makeText(getActivity(),"No data",Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
