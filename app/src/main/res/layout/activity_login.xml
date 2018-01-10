@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,13 +26,16 @@
                 style="@style/margin"
                 android:layout_marginTop="30dp">
 
-                <EditText
-                    android:id="@+id/username"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/email_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Email Id"
                     android:inputType="textEmailAddress"
-                    android:hint="Email" />
-
+                    android:textColor="#212121"
+                    android:textColorHint="#212121"
+                    tools:ignore="HardcodedText" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -41,13 +45,16 @@
                 android:layout_below="@id/usernameWrapper"
                 style="@style/margin">
 
-                <EditText
-                    android:id="@+id/password"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/pwd_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Password"
                     android:inputType="textPassword"
-                    android:hint="Password" />
-
+                    android:textColor="#212121"
+                    android:textColorHint="#212121"
+                    tools:ignore="HardcodedText" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -67,13 +74,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+
                 <View
                     android:layout_width="0dp"
                     android:layout_height="2dp"
                     android:layout_weight=".22"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="8dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/darker_gray" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -81,17 +90,16 @@
                     android:layout_weight="0.56"
                     android:gravity="center_horizontal"
                     android:textSize="15sp"
-                    android:textAllCaps="true"/>
+                    android:textAllCaps="true" />
+
                 <View
                     android:layout_marginTop="8dp"
                     android:layout_width="0dp"
                     android:layout_height="2dp"
                     android:layout_weight=".22"
                     android:layout_marginRight="20dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/darker_gray" />
             </LinearLayout>
-
-
         </LinearLayout>
 
 
@@ -104,12 +112,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="30dp"
             android:layout_marginEnd="45dp"
-            android:layout_marginRight="45dp">
-
-        </com.google.android.gms.common.SignInButton>
-
-
-
+            android:layout_marginRight="45dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -124,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ques"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/sign_up"
@@ -134,8 +137,7 @@
                 android:text="@string/signup"
                 android:textColor="@android:color/holo_red_dark"
                 android:layout_marginLeft="10dp"
-                android:textSize="15sp"/>
-
+                android:textSize="15sp" />
         </LinearLayout>
 
         <ImageView
@@ -148,7 +150,5 @@
             android:layout_toLeftOf="@+id/googleBtn"
             android:layout_toStartOf="@+id/googleBtn"
             android:src="@drawable/facebook_button" />
-
-
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

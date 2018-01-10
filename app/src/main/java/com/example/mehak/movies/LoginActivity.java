@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -54,8 +55,12 @@ import static java.security.AccessController.getContext;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextInputLayout mLoginEmail;
-    private TextInputLayout mLoginPassword;
+    /*private TextInputLayout mLoginEmail;
+    private TextInputLayout mLoginPassword;*/
+
+    private TextInputEditText textInputEditTextEmail;
+    private TextInputEditText textInputEditTextPassword;
+
     private Button mLoginBtn;
     private ProgressDialog mLoginProgress;
     private FirebaseAuth mAuth;
@@ -75,26 +80,25 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-
         mAuth = FirebaseAuth.getInstance();
 
         mLoginProgress = new ProgressDialog(this);
 
         //======================================================================================
 
-        mLoginEmail = (TextInputLayout) findViewById(R.id.usernameWrapper);
-        mLoginPassword = (TextInputLayout) findViewById(R.id.passwordWrapper);
+        textInputEditTextEmail = (TextInputEditText) findViewById(R.id.email_input);
+        textInputEditTextPassword = (TextInputEditText) findViewById(R.id.pwd_input);
         mLoginBtn = (Button) findViewById(R.id.login_btn);
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String email = mLoginEmail.getEditText().getText().toString().trim();
-                String password = mLoginPassword.getEditText().getText().toString().trim();
+                String email = textInputEditTextEmail.getText().toString().trim();
+                String password = textInputEditTextPassword.getText().toString().trim();
 
                 if (isNetworkAvailable()) {
-                    if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
+                    if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
 
                         mLoginProgress.setTitle("Loging in");
                         mLoginProgress.setMessage("Please wait while we check your credentials");
@@ -102,16 +106,17 @@ public class LoginActivity extends AppCompatActivity {
                         mLoginProgress.show();
 
                         loginUser(email, password);
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Please fill the desired fields.", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
 
-        TextView sign = (TextView)findViewById(R.id.sign_up);
+        TextView sign = (TextView) findViewById(R.id.sign_up);
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //google sign in
 
-        googleSignIn = (SignInButton)findViewById(R.id.googleBtn);
+        googleSignIn = (SignInButton) findViewById(R.id.googleBtn);
 
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,8 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (isNetworkAvailable()) {
 
                     signIn();
-                }else
-                {
+                } else {
                     Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
                 }
             }
@@ -151,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(LoginActivity.this,"Something went wrong!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -195,9 +199,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                     });
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getApplicationContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
                 }
             }
@@ -256,7 +258,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                             mLoginProgress.dismiss();
-                            Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                             startActivity(intent);
                             finish();
 
@@ -290,23 +292,23 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-            super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
 
-            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-            if (requestCode == RC_SIGN_IN) {
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
 
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                if (result.isSuccess()) {
-                    GoogleSignInAccount account = result.getSignInAccount();
-                    firebaseAuthWithGoogle(account);
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
 
-                } else {
-                    Toast.makeText(LoginActivity.this, "Auth went wrong!", Toast.LENGTH_SHORT).show();
-                }
             } else {
-                mCallbackManager.onActivityResult(requestCode, resultCode, data);
+                Toast.makeText(LoginActivity.this, "Auth went wrong!", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
 
     }
 
@@ -322,7 +324,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("ok", "signInWithCredential:success");
 
                             mLoginProgress.dismiss();
-                            Intent mainIntent = new Intent(LoginActivity.this,DashboardActivity.class);
+                            Intent mainIntent = new Intent(LoginActivity.this, DashboardActivity.class);
                             startActivity(mainIntent);
 
                             //doesn't back until he logs out.
@@ -332,7 +334,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w("notok", "signInWithCredential:failure", task.getException());
 
                             mLoginProgress.hide();
-                            Toast.makeText(LoginActivity.this,"Authentication failed!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Authentication failed!", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -346,7 +348,6 @@ public class LoginActivity extends AppCompatActivity {
     //========================================================================================
 
 
-
     private void loginUser(String email, String password) {
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -357,7 +358,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("ok", "signInWithEmail:success");
 
                     mLoginProgress.dismiss();
-                    Intent mainIntent = new Intent(LoginActivity.this,DashboardActivity.class);
+                    Intent mainIntent = new Intent(LoginActivity.this, DashboardActivity.class);
                     startActivity(mainIntent);
 
                     //doesn't back until he logs out.
