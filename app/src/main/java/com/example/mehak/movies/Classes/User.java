@@ -6,8 +6,8 @@ import android.os.Parcelable;
 public class User implements Parcelable {
     public String userName;
     public String email;
-    public String password;
-    public String userId;
+    private String password;
+
 
     public User(){}
 
@@ -15,7 +15,7 @@ public class User implements Parcelable {
         userName = in.readString();
         email = in.readString();
         password = in.readString();
-       // userId = in.readString();
+
     }
 
     @Override
@@ -29,7 +29,6 @@ public class User implements Parcelable {
         parcel.writeString(userName);
         parcel.writeString(email);
         parcel.writeString(password);
-      //  parcel.writeString(userId);
 
     }
 
