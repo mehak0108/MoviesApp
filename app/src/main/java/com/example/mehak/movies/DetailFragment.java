@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -68,6 +71,7 @@ public class DetailFragment extends Fragment {
     User mUser;
     int check = 0;
 
+
     private Movie movie;
     String[] trailer_key;
     String s;
@@ -95,8 +99,6 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -489,6 +491,4 @@ public class DetailFragment extends Fragment {
             return null;
         }
     }
-
-
 }

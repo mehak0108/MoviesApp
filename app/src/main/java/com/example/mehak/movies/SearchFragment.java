@@ -1,12 +1,14 @@
 package com.example.mehak.movies;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +52,11 @@ public class SearchFragment extends Fragment {
     private ProgressDialog mSearchProgress;
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }
@@ -76,8 +83,16 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", moviesList);
+        Log.e("changed", "changed");
     }
 
     @Override

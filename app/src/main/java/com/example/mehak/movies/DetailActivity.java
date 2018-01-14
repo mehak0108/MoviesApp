@@ -15,7 +15,7 @@ public class DetailActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        //initToolbar();
+        initToolbar();
 
         if (savedInstanceState == null){
             Bundle args = new Bundle();
@@ -27,6 +27,7 @@ public class DetailActivity extends AppCompatActivity{
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction().replace(R.id.details_container, fragment).commit();
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }
 
@@ -44,10 +45,11 @@ public class DetailActivity extends AppCompatActivity{
 
         Log.e("working tool", "ok");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar_detail);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
         if (toolbar != null) {
             Log.e("working tool", "ok");
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

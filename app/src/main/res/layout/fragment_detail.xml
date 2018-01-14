@@ -5,7 +5,7 @@
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
     android:background="@drawable/login_bg"
-    tools:context="com.example.mehak.movies.DetailFragment">
+    tools:context=".DetailFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         <!-- Thumbnail-->
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             android:adjustViewBounds="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
             android:textSize="16sp"
             android:layout_below="@id/r_date_textview"
             android:text="@string/rating"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
 
         <!-- Rating bar-->
         <RatingBar
@@ -77,7 +77,7 @@
             android:clickable="false"
             android:stepSize="0.5"
             android:layout_below="@+id/r_date_textview"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="15dp" />
 
         <!--Plot-->
         <TextView
@@ -89,7 +89,7 @@
             android:id="@+id/plot"
             android:text="@string/plot"
             android:textStyle="bold"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp" />
 
         <TextView
             android:id="@+id/plot_textview"
@@ -101,7 +101,7 @@
             android:textSize="16sp"
             android:textColor="#000000"
             android:textIsSelectable="true"
-            android:text="@string/overview"/>
+            android:text="@string/overview" />
 
         <!-- Reviews title-->
         <TextView
@@ -113,7 +113,7 @@
             android:id="@+id/review"
             android:text="@string/reviews"
             android:textStyle="bold"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp" />
 
         <ListView
             android:id="@+id/reviews_list"
@@ -138,7 +138,7 @@
             android:isScrollContainer="true"
             android:layout_width="230dp"
             android:scrollbars="vertical"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="30dp" />
 
         <!-- Send image-->
         <ImageView
@@ -148,6 +148,7 @@
             android:layout_marginTop="93dp"
             android:src="@drawable/send"
             android:layout_below="@id/reviews_list"
-            android:layout_toRightOf="@id/postSection"/>
+            android:layout_toRightOf="@id/postSection" />
     </RelativeLayout>
+
 </ScrollView>

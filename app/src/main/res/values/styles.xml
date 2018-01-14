@@ -32,6 +32,6 @@
         <item name="colorControlActivated">#ef5350</item>
         <!-- Applied to framework control highlights (i.e ripples or list selectors) -->
         <item name="colorControlHighlight">#ef5350</item>
-        <item name="android:statusBarColor">#D32F2F</item>
+        <!--item name="android:statusBarColor">#D32F2F</item-->
     </style>
 </resources>

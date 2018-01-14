@@ -144,6 +144,7 @@ public class OngoingFragment extends Fragment {
 
         }
 
+
         View rootView = inflater.inflate(R.layout.movie_list, container, false);
         ListView lv = (ListView) rootView.findViewById(R.id.list);
         adapter = new MovieAdapter(getActivity(), moviesList);
@@ -232,7 +233,6 @@ public class OngoingFragment extends Fragment {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String sort_by = prefs.getString(getString(R.string.pref_general_key), getString(R.string.popularity));
             moviesList.clear();
-
 
             if(sort_by.equals(getString(R.string.favorites))){
                 fetchFavorites();

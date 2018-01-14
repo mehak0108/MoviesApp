@@ -16,6 +16,8 @@ public class SearchActivity extends AppCompatActivity implements ItemSelected {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        initToolbar();
+
         if (savedInstanceState == null){
             Bundle args = new Bundle();
             if (getIntent().getParcelableExtra("MOVIE")== null)
@@ -49,6 +51,18 @@ public class SearchActivity extends AppCompatActivity implements ItemSelected {
         intent.putExtra("MOVIE", movie);
         startActivity(intent);
         //}
+    }
+
+    private void initToolbar() {
+
+        Log.e("working tool", "ok");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_search);
+        if (toolbar != null) {
+            Log.e("working tool", "ok");
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
 }

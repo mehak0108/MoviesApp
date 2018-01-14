@@ -14,7 +14,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="40dp"
         android:soundEffectsEnabled="true">
-
         <requestFocus />
     </SearchView>
 </RelativeLayout>
