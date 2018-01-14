@@ -1,16 +1,12 @@
 package com.example.mehak.movies;
 
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.ProgressDialog;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,15 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mehak.movies.Adapters.MovieAdapter;
 import com.example.mehak.movies.Classes.Movie;
-import com.example.mehak.movies.data.MovieDbHelper;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,48 +33,21 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OngoingFragment extends Fragment {
-    private String BASE_URL = "http://api.themoviedb.org/3/discover/movie";
+public class SearchFragment extends Fragment {
+    private String BASE_URL = "http://api.themoviedb.org/3/search/movie";
+    public static final String MOVIE_DETAIL = "movieDetails";
     ArrayList<Movie> moviesList;
     MovieAdapter adapter;
     Movie movie;
-    FloatingActionButton mFabSearch;
-
-    /*public static OngoingFragment newInstance(int page, String title) {
-        OngoingFragment var = new OngoingFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", page);
-        args.putString("someTitle", title);
-        var.setArguments(args);
-        return var;
-    }*/
-
-    /*public interface Callback {
-        public void onItemSelected(Movie movie);
-    }*/
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
+    SearchView searchView;
+    private ProgressDialog mSearchProgress;
 
     @Override
     public void onDetach() {
@@ -112,8 +78,6 @@ public class OngoingFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("movies", moviesList);
-        Log.w(TAG, "ok");
     }
 
     @Override
@@ -122,32 +86,64 @@ public class OngoingFragment extends Fragment {
     }
 
 
-    public OngoingFragment() {
+    public SearchFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         Log.v(TAG, "onCreateView");
+
+        mSearchProgress = new ProgressDialog(getContext());
+
+        Bundle args = getArguments();
         if (savedInstanceState == null || !savedInstanceState.containsKey("moviesList")) {
             moviesList = new ArrayList<Movie>();
             adapter = new MovieAdapter(getActivity(), moviesList);
-            updateMovie();
+
         } else {
             moviesList = savedInstanceState.getParcelableArrayList("moviesList");
             adapter = new MovieAdapter(getActivity(), moviesList);
 
         }
 
-        View rootView = inflater.inflate(R.layout.movie_list, container, false);
-        ListView lv = (ListView) rootView.findViewById(R.id.list);
-        adapter = new MovieAdapter(getActivity(), moviesList);
-        lv.setAdapter(adapter);
+
+        if (args != null) {
+            movie = args.getParcelable(MOVIE_DETAIL);
+            View rootView = inflater.inflate(R.layout.search_movie_list, container, false);
+            ListView lv = (ListView) rootView.findViewById(R.id.searchList);
+            adapter = new MovieAdapter(getActivity(), moviesList);
+            lv.setAdapter(adapter);
+
+            searchView = (SearchView) rootView.findViewById(R.id.search_view);
+            searchView.setQueryHint("Enter the movie name to search");
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    if (isNetworkAvailable()) {
+                        moviesList.clear();
+                        mSearchProgress.setTitle("Searching");
+                        mSearchProgress.setMessage("Please wait!!");
+                        mSearchProgress.setCanceledOnTouchOutside(false);
+                        mSearchProgress.show();
+                        FetchMovieTask movieTask = new FetchMovieTask();
+                        movieTask.execute(s);
+                    }
+                    else {
+                        Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -162,43 +158,10 @@ public class OngoingFragment extends Fragment {
             }
         });
 
-        //fabSearch
-        mFabSearch = (FloatingActionButton) rootView.findViewById(R.id.fabSearch);
-        mFabSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isNetworkAvailable()){
-                    Intent searchIntent = new Intent(getActivity(), SearchActivity.class);
-                    startActivity(searchIntent);
-                }
-                else {
-                    Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
-                }
-            }
+            return rootView;
+        } else
+            return null;
 
-        });
-        return rootView;
-    }
-
-    public void fetchFavorites() {
-
-        MovieDbHelper db = new MovieDbHelper(getContext());
-        ArrayList<Movie> movieDetails = db.getAllMovies();
-        int n=movieDetails.size();
-        if (n > 0) {
-            moviesList = movieDetails;
-            Movie movies[]=new Movie[n];
-            for(int i=0;i<n;i++) {
-                movies[i] = moviesList.get(i);
-                Log.e("Name", movies[i].title);
-                adapter.add(movies[i]);
-            }
-
-            adapter.notifyDataSetChanged();
-        }
-        else {
-            Toast.makeText(getActivity(), "No Favourites Added!", Toast.LENGTH_LONG).show();
-        }
     }
 
     private boolean isNetworkAvailable() {
@@ -208,68 +171,27 @@ public class OngoingFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void onPreferenceChanged(String sort_by) {
-        Log.v(TAG, "PREFERENCE CHANGED");
-        moviesList.clear();
-
-        if (sort_by.equals(getString(R.string.favorites))) {
-
-            fetchFavorites();
-        } else {
-            if (isNetworkAvailable()) {
-
-                FetchMovieTask movieTask = new FetchMovieTask();
-                movieTask.execute(sort_by);
-            } else
-                Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection",
-                        Toast.LENGTH_LONG).show();
-
-        }
-    }
-
-    public void updateMovie() {
-        if (isNetworkAvailable()) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String sort_by = prefs.getString(getString(R.string.pref_general_key), getString(R.string.popularity));
-            moviesList.clear();
-
-
-            if(sort_by.equals(getString(R.string.favorites))){
-                fetchFavorites();
-            }
-            else{
-                FetchMovieTask movieTask = new FetchMovieTask();
-                movieTask.execute(sort_by);
-            }
-        }
-        else {
-            Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
-        }
-    }
-
     class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
         Movie[] movieObj;
         int i;
         String json_str = null;
         final String PAGE = "page";
-        final String RELEASE_YEAR = "primary_release_year";
+        final String QUERY = "query";
         Uri uri;
 
         @Override
         protected Movie[] doInBackground(String... param) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-            final String SORT_BY = "sort_by";
             final String API_KEY = "api_key";
-            String sort_by_category = param[0];
-            for (i = 1; i < 4; i++) {
+            String searchQuery = param[0];
+            for (i = 1; i < 15; i++) {
 
                 uri = Uri.parse(BASE_URL).buildUpon().
-                        appendQueryParameter(SORT_BY, sort_by_category + ".desc").
                         appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
                         appendQueryParameter(PAGE, String.valueOf(i)).
-                        appendQueryParameter(RELEASE_YEAR, String.valueOf(2018)).
+                        appendQueryParameter(QUERY, searchQuery).
                         build();
                 Log.w(TAG, uri.toString());
 
@@ -325,44 +247,12 @@ public class OngoingFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Movie[] m) {
-
+            mSearchProgress.dismiss();
             for (Movie current : m)
                 adapter.add(current);
             adapter.notifyDataSetChanged();
-
-
         }
     }
-
-    /*String newDateString;
-    static Date startDate;
-    static Calendar cal;
-
-    public static Date stringToDate(String s) {
-        //  String startDateString = "08/01/2017";
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-
-        try {
-            startDate = df.parse(s);
-            Log.w(TAG, startDate.toString());
-            Log.w(TAG, df.format(startDate));
-
-            //newDateString = df.format(startDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return startDate;
-
-    }
-
-
-    public static int getYear(Date date) {
-        cal = Calendar.getInstance();
-        cal.setTime(date);
-        Log.e(TAG, String.valueOf(cal.get(Calendar.YEAR)));
-        return cal.get(Calendar.YEAR);
-    }*/
 
     private Movie[] getMoviedata(String s) {
         final String MOVIEDB_RESULT = "results";
@@ -408,4 +298,5 @@ public class OngoingFragment extends Fragment {
         return resultList;
 
     }
+
 }

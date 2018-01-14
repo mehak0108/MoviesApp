@@ -8,13 +8,11 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.mehak.movies.DetailActivity">
 
-
     <include
         android:id="@+id/toolbar_actionbar_detail"
         layout="@layout/toolbar_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 
     <include layout="@layout/content_detail" />
 
@@ -24,5 +22,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/fav_white" />
+        android:src="@android:drawable/btn_star_big_off" />
 </android.support.design.widget.CoordinatorLayout>

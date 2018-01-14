@@ -230,7 +230,8 @@ public class DetailFragment extends Fragment {
                 fab.setImageResource(R.drawable.fav_col);
             }
             else{
-                fab.setImageResource(R.drawable.fav_white);
+                Log.e("work", "12345");
+                //fab.setImageResource(R.drawable.fav_white);
             }
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -429,9 +430,9 @@ public class DetailFragment extends Fragment {
 
                     mReviewAdapter.notifyDataSetChanged();
 
-                } else {
+                } /*else {
                     Toast.makeText(getActivity(), "No reviews till now!", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
 
             @Override
@@ -456,6 +457,9 @@ public class DetailFragment extends Fragment {
             OngoingFragment mf = (OngoingFragment) getActivity().getSupportFragmentManager()
                     .findFragmentById(R.id.movies_fragment);
             mf.fetchFavorites();
+            RetroFragment rf = (RetroFragment) getActivity().getSupportFragmentManager()
+                    .findFragmentById(R.id.movies_fragment);
+            rf.fetchFavorites();
         }
     }
 

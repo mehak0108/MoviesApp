@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -46,12 +47,13 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
 
 
-public class DashboardActivity extends AppCompatActivity implements OngoingFragment.Callback{
+public class DashboardActivity extends AppCompatActivity implements ItemSelected{
 
     public FirebaseAuth auth;
     public static String mSortBy;
    // public static boolean mtwoPane;
     private static final String DETAILFRAGMENT_TAG="DFTAG";
+
 
     Toolbar toolbar;
     Drawer result;
@@ -84,6 +86,9 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
         currentUser = auth.getCurrentUser();
         initToolbar();
 
+
+
+        //Navigation Drawer
         activity = DashboardActivity.this;
         manager = getSupportFragmentManager();
 

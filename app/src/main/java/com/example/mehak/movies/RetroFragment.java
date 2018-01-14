@@ -2,6 +2,7 @@ package com.example.mehak.movies;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +51,7 @@ public class RetroFragment extends Fragment {
     ArrayList<Movie> moviesList;
     MovieAdapter adapter;
     Movie movie;
+    FloatingActionButton mFabSearch;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,13 +131,29 @@ public class RetroFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (isNetworkAvailable()) {
-                    ((OngoingFragment.Callback) getActivity()).onItemSelected(moviesList.get(position));
+                    ((ItemSelected) getActivity()).onItemSelected(moviesList.get(position));
                 }
                 else {
                     Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection",
                             Toast.LENGTH_LONG).show();
                 }
             }
+        });
+
+        //fabSearch
+        mFabSearch = (FloatingActionButton) rootView.findViewById(R.id.fabSearch);
+        mFabSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isNetworkAvailable()){
+                    Intent searchIntent = new Intent(getActivity(), SearchActivity.class);
+                    startActivity(searchIntent);
+                }
+                else {
+                    Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
+                }
+            }
+
         });
         return rootView;
     }
