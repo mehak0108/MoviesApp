@@ -213,8 +213,13 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
         if (mSortBy!=null && !sort_by.equals(mSortBy)){
             OngoingFragment mf=(OngoingFragment) getSupportFragmentManager().
                     findFragmentById(R.id.movies_fragment);
+            RetroFragment rf = (RetroFragment) getSupportFragmentManager().
+                    findFragmentById(R.id.movies_fragment);
             if(mf!=null)
                 mf.onPreferenceChanged(sort_by);
+            if (rf!=null)
+                rf.onPreferenceChanged(sort_by);
+
         }
         mSortBy= sort_by;
 
@@ -234,8 +239,6 @@ public class DashboardActivity extends AppCompatActivity implements OngoingFragm
         if(toggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-
         if(menuItemThatWasSelected == R.id.action_search){
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);

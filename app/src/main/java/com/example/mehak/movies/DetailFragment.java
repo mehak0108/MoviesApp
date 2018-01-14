@@ -31,8 +31,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -133,8 +131,12 @@ public class DetailFragment extends Fragment {
             viewHolder.imageView.setAdjustViewBounds(true);
             Picasso.with(getActivity()).load(movie.thumbnail).resize(780, 450).into(viewHolder.imageView);
             viewHolder.titleView.setText(movie.title);
-            // if (!(movie.plot).equals(""))
-            viewHolder.plotView.setText(movie.plot);
+
+            if (!(movie.plot).equals(""))
+                viewHolder.plotView.setText(movie.plot);
+            else
+                viewHolder.plotView.setText("Plot not avaliable!");
+
             viewHolder.rating.setRating((Float.parseFloat(movie.user_rating)) / 2);
             viewHolder.dateView.setText(movie.release_date);
 
@@ -183,7 +185,6 @@ public class DetailFragment extends Fragment {
                 public void onClick(View view) {
 
                     s = reviewPost.getText().toString();
-
                     if (s.length() == 0) {
                         Toast.makeText(getContext(), "Please write a review", Toast.LENGTH_SHORT).show();
                     } else {
@@ -429,7 +430,7 @@ public class DetailFragment extends Fragment {
                     mReviewAdapter.notifyDataSetChanged();
 
                 } else {
-                    Toast.makeText(getActivity(), "No data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "No reviews till now!", Toast.LENGTH_SHORT).show();
                 }
             }
 

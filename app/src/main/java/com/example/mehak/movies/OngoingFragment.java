@@ -56,7 +56,6 @@ public class OngoingFragment extends Fragment {
     MovieAdapter adapter;
     Movie movie;
 
-
     /*public static OngoingFragment newInstance(int page, String title) {
         OngoingFragment var = new OngoingFragment();
         Bundle args = new Bundle();
@@ -233,21 +232,8 @@ public class OngoingFragment extends Fragment {
         int i;
         String json_str = null;
         final String PAGE = "page";
-        final String DATENEW = "release_date.gte";
-        final String DATEOLD = "release_date.lte";
+        final String RELEASE_YEAR = "primary_release_year";
         Uri uri;
-
-       /* public Date dateToString() throws ParseException {
-            Date date;
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-            String dateInString= "2017-01-01";
-            date = df.parse(dateInString);
-
-            return date;
-
-        }*/
-
 
         @Override
         protected Movie[] doInBackground(String... param) {
@@ -258,23 +244,13 @@ public class OngoingFragment extends Fragment {
             String sort_by_category = param[0];
             for (i = 1; i < 4; i++) {
 
-
                 uri = Uri.parse(BASE_URL).buildUpon().
                         appendQueryParameter(SORT_BY, sort_by_category + ".desc").
                         appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
                         appendQueryParameter(PAGE, String.valueOf(i)).
-                        appendQueryParameter(DATENEW, "2017-10-10").
+                        appendQueryParameter(RELEASE_YEAR, String.valueOf(2018)).
                         build();
                 Log.w(TAG, uri.toString());
-
-
-                    /*uri = Uri.parse(BASE_URL).buildUpon().
-                            appendQueryParameter(SORT_BY, sort_by_category + ".desc").
-                            appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
-                            appendQueryParameter(PAGE, String.valueOf(i)).
-                            appendQueryParameter(DATEOLD, String.valueOf(2016 - 01 - 01)).
-                            build();
-*/
 
                 try {
                     URL url = new URL(uri.toString());
@@ -328,7 +304,7 @@ public class OngoingFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Movie[] m) {
-            //adapter.clear();
+
             for (Movie current : m)
                 adapter.add(current);
             adapter.notifyDataSetChanged();
@@ -337,7 +313,7 @@ public class OngoingFragment extends Fragment {
         }
     }
 
-    String newDateString;
+    /*String newDateString;
     static Date startDate;
     static Calendar cal;
 
@@ -365,7 +341,7 @@ public class OngoingFragment extends Fragment {
         cal.setTime(date);
         Log.e(TAG, String.valueOf(cal.get(Calendar.YEAR)));
         return cal.get(Calendar.YEAR);
-    }
+    }*/
 
     private Movie[] getMoviedata(String s) {
         final String MOVIEDB_RESULT = "results";
@@ -390,8 +366,6 @@ public class OngoingFragment extends Fragment {
             for (int i = 0; i < ar.length(); i++) {
                 JSONObject jsonobject = ar.getJSONObject(i);
                 movie = new Movie();
-                // if (getYear(stringToDate(jsonobject.getString(RELEASE_DATE))) >= getYear(stringToDate("2017-08-08"))) {
-
                 movie.title = jsonobject.getString(MOVIEDB_TITLE);
                 movie.user_rating = jsonobject.getString(USER_RATING);
                 movie.language = jsonobject.getString(LANG);
@@ -405,14 +379,6 @@ public class OngoingFragment extends Fragment {
                 movie.movie_id = jsonobject.getString(ID);
                 resultList[i] = movie;
                 moviesList.add(movie);
-               /* }
-                else
-                {
-                    Log.w(TAG, "no prob");
-                    Log.w(TAG, jsonobject.getString(RELEASE_DATE));
-                    continue;
-
-                }*/
 
             }
         } catch (JSONException e) {
