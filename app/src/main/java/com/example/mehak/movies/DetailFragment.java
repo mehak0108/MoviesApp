@@ -1,12 +1,15 @@
 package com.example.mehak.movies;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +25,8 @@ import com.example.mehak.movies.Classes.Movie;
 import com.example.mehak.movies.Classes.MovieReview;
 import com.example.mehak.movies.Classes.MovieTrailer;
 import com.example.mehak.movies.Classes.User;
+import com.example.mehak.movies.data.MovieContract.MovieEntry;
+import com.example.mehak.movies.data.MovieDbHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +62,7 @@ public class DetailFragment extends Fragment {
     private final String INFO_URL = "http://api.themoviedb.org/3/movie/";
     public static final String MOVIE_DETAIL = "movieDetails";
     private String movie_id;
+    View rootView;
     ArrayList<MovieTrailer> trailers;
     ArrayList<MovieReview> reviews;
     ReviewAdapter mReviewAdapter;
@@ -84,11 +90,15 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*if(!DashboardActivity.mtwoPane)
+            setHasOptionsMenu(true);*/
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -109,12 +119,12 @@ public class DetailFragment extends Fragment {
         }
         if (args != null) {
             movie = args.getParcelable(MOVIE_DETAIL);
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             viewHolder = new Viewholder(rootView);
             rootView.setTag(viewHolder);
             viewHolder = (Viewholder) rootView.getTag();
             movie_id = movie.movie_id;
-            // final FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.fab);
+            final FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.fab);
 
             if (savedInstanceState == null) {
                 getTrailer();
@@ -212,6 +222,32 @@ public class DetailFragment extends Fragment {
 
                 }
             });
+
+            //favourites
+            MovieDbHelper dbHelper = new MovieDbHelper(getContext());
+            if (dbHelper.hasObject(movie_id)) {
+                fab.setImageResource(R.drawable.fav_col);
+            }
+            else{
+                fab.setImageResource(R.drawable.fav_white);
+            }
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MovieDbHelper dbHelper = new MovieDbHelper(getContext());
+                    if (!dbHelper.hasObject(movie_id)) {
+                        saveToDatabase();
+                        Log.e("fav", movie_id);
+                        Toast.makeText(getContext(), "Added to Favorite!", Toast.LENGTH_SHORT).show();
+                        fab.setImageResource(R.drawable.fav_col);
+                    } else {
+                        removeDatabase();
+                        Toast.makeText(getContext(), "Removed from Favorite!", Toast.LENGTH_SHORT).show();
+                        fab.setImageResource(R.drawable.fav_white);
+                    }
+                }
+            });
+
             return rootView;
         } else
             return null;
@@ -404,4 +440,50 @@ public class DetailFragment extends Fragment {
         });
 
     }
+
+    //favorites
+    private void saveToDatabase(){
+        DatabaseTask movieTask=new DatabaseTask();
+        movieTask.execute("save");
+    }
+    private void removeDatabase(){
+        DatabaseTask movieTask=new DatabaseTask();
+        movieTask.execute("remove");
+       // if(DashboardActivity.mtwoPane && DashboardActivity.mSortBy.equals(R.string.favorites))
+        if(DashboardActivity.mSortBy.equals(R.string.favorites))
+        {
+            OngoingFragment mf = (OngoingFragment) getActivity().getSupportFragmentManager()
+                    .findFragmentById(R.id.movies_fragment);
+            mf.fetchFavorites();
+        }
+    }
+
+    class DatabaseTask extends AsyncTask<String, Void, Boolean> {
+        final MovieDbHelper db = new MovieDbHelper(getContext());
+        final SQLiteDatabase database = db.getWritableDatabase();
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            if (params[0].equals("save")) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MovieEntry.COLUMN_MID, movie_id);
+                contentValues.put(MovieEntry.COLUMN_TITLE, movie.title);
+                contentValues.put(MovieEntry.COLUMN_POSTER, movie.poster_path);
+                contentValues.put(MovieEntry.COLUMN_DATE, movie.release_date);
+                contentValues.put(MovieEntry.COLUMN_OVERVIEW, movie.plot);
+                contentValues.put(MovieEntry.COLUMN_RATING, movie.user_rating);
+                contentValues.put(MovieEntry.COLUMN_BACKDROP, movie.thumbnail);
+                long row_id = database.insert(MovieEntry.TABLE_NAME, null, contentValues);
+                db.close();
+                return row_id != -1;
+            } else if (params[0].equals("remove")) {
+                database.delete(MovieEntry.TABLE_NAME, MovieEntry.COLUMN_MID + "=?", new String[]{movie_id});
+                db.close();
+                return null;
+            }
+            return null;
+        }
+    }
+
+
 }

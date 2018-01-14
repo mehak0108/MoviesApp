@@ -6,7 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.mehak.movies.DashboardActivity">
+    tools:context="com.example.mehak.movies.DetailActivity">
+
+
+    <include
+        android:id="@+id/toolbar_actionbar_detail"
+        layout="@layout/toolbar_default"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
     <include layout="@layout/content_detail" />
 

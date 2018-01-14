@@ -33,6 +33,15 @@ dependencies {
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation("com.mikepenz:materialdrawer:6.0.2@aar") {
+        transitive = true
+    }
+
+    //required support lib modules
+    implementation "com.android.support:recyclerview-v7:27.0.1"
+    implementation "com.android.support:support-annotations:27.0.1"
+    implementation "com.android.support:design:27.0.1"
+
     compile 'com.android.support:design:27.0.1'
     compile 'com.android.support:appcompat-v7:27.0.1'
 
@@ -40,12 +49,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:27.0.1'
     compile 'com.android.support:design:27.0.1'
 
-    //compile 'com.android.support:design:26.1.0'
-    //compile 'com.android.support:appcompat-v7:26.1.0'
-
     compile 'com.squareup.picasso:picasso:2.5.2'
-    //compile 'com.android.support:cardview-v7:26.1.0'
-    //compile 'com.android.support:design:26.1.0'
     compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
 
     compile 'com.google.firebase:firebase-auth:11.8.0'
@@ -55,6 +59,7 @@ dependencies {
 
 
 }
+
 
 
 

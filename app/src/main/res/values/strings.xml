@@ -21,6 +21,7 @@
 
     <string name="rating">Rating:      </string>
     <string name="pref_general_summary">Sort the movies by choosing a category</string>
+    <string name="favorites">favorites</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -39,4 +40,15 @@
     <string name="movie_name">Movie Name</string>
     <string name="rate">Rate</string>
     <string name="language">Language</string>
+
+    <!-- Navigation Drawer menu labels -->
+    <string name="NavSettings">Settings</string>
+    <string name="NavAboutUs">About Us</string>
+    <string name="NavLogout">Logout</string>
+
+    <!--Navigation drawer string labels-->
+    <string name="NavigationDrawerOpen">Open navigation drawer</string>
+    <string name="NavigationDrawerClose">Close navigation drawer</string>
+    <string name="OpenDrawer">open_drawer</string>
+    <string name="CloseDrawer">close_drawer</string>
 </resources>

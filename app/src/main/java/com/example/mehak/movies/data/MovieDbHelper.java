@@ -11,9 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-/**
- * Created by mehak on 15/12/17.
- */
+
 
 public class MovieDbHelper extends SQLiteOpenHelper {
 

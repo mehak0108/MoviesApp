@@ -1,7 +1,9 @@
 package com.example.mehak.movies;
 
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -29,22 +31,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.layout.general_prefs);
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_general_key)));
-       /* ActionBar actionBar = this.getActionBar();
-
-        if (actionBar !=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }*/
     }
-
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home){
-            NavUtils.navigateUpFromSameTask(this);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     public void onStart() {
         super.onStart();
@@ -110,6 +97,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public Intent getParentActivityIntent(){
+        return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
 
     @Override

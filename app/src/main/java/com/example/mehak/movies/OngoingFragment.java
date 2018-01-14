@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.mehak.movies.Adapters.MovieAdapter;
 import com.example.mehak.movies.Classes.Movie;
+import com.example.mehak.movies.data.MovieDbHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -147,10 +148,37 @@ public class OngoingFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((Callback) getActivity()).onItemSelected(moviesList.get(position));
+                if (isNetworkAvailable()) {
+                    ((Callback) getActivity()).onItemSelected(moviesList.get(position));
+                }
+                else {
+                    Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
         return rootView;
+    }
+
+    public void fetchFavorites() {
+
+        MovieDbHelper db = new MovieDbHelper(getContext());
+        ArrayList<Movie> movieDetails = db.getAllMovies();
+        int n=movieDetails.size();
+        if (n > 0) {
+            moviesList = movieDetails;
+            Movie movies[]=new Movie[n];
+            for(int i=0;i<n;i++) {
+                movies[i] = moviesList.get(i);
+                Log.e("Name", movies[i].title);
+                adapter.add(movies[i]);
+            }
+
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            Toast.makeText(getActivity(), "No Favourites Added!", Toast.LENGTH_LONG).show();
+        }
     }
 
     private boolean isNetworkAvailable() {
@@ -164,19 +192,19 @@ public class OngoingFragment extends Fragment {
         Log.v(TAG, "PREFERENCE CHANGED");
         moviesList.clear();
 
-        /*if(sort_by.equals(getString(R.string.favorites))){
+        if (sort_by.equals(getString(R.string.favorites))) {
+
             fetchFavorites();
-        }
-        else{*/
-            if(isNetworkAvailable()) {
+        } else {
+            if (isNetworkAvailable()) {
 
                 FetchMovieTask movieTask = new FetchMovieTask();
                 movieTask.execute(sort_by);
-            }
-            else
+            } else
                 Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection",
                         Toast.LENGTH_LONG).show();
 
+        }
     }
 
     public void updateMovie() {
@@ -184,14 +212,19 @@ public class OngoingFragment extends Fragment {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String sort_by = prefs.getString(getString(R.string.pref_general_key), getString(R.string.popularity));
             moviesList.clear();
-            FetchMovieTask movieTask = new FetchMovieTask();
-            movieTask.execute(sort_by);
+
+
+            if(sort_by.equals(getString(R.string.favorites))){
+                fetchFavorites();
+            }
+            else{
+                FetchMovieTask movieTask = new FetchMovieTask();
+                movieTask.execute(sort_by);
+            }
         }
         else {
             Toast.makeText(getContext(), "No Connection!\nCheck your Internet Connection", Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
@@ -199,8 +232,6 @@ public class OngoingFragment extends Fragment {
         Movie[] movieObj;
         int i;
         String json_str = null;
-        final String SORT_BY = "sort_by";
-        final String API_KEY = "api_key";
         final String PAGE = "page";
         final String DATENEW = "release_date.gte";
         final String DATEOLD = "release_date.lte";
@@ -222,6 +253,8 @@ public class OngoingFragment extends Fragment {
         protected Movie[] doInBackground(String... param) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
+            final String SORT_BY = "sort_by";
+            final String API_KEY = "api_key";
             String sort_by_category = param[0];
             for (i = 1; i < 4; i++) {
 

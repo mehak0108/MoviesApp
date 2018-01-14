@@ -2,10 +2,6 @@ package com.example.mehak.movies.data;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by mehak on 16/12/17.
- */
-
 public class MovieContract {
     public static final class MovieEntry implements BaseColumns {
         public static final String TABLE_NAME="Movies";

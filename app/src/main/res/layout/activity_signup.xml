@@ -10,6 +10,12 @@
         android:layout_height="match_parent"
         android:background="@drawable/login_bg">
 
+        <include
+            android:id="@+id/toolbar_actionbar_signup"
+            layout="@layout/toolbar_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
             android:id="@+id/form"
             android:layout_width="match_parent"

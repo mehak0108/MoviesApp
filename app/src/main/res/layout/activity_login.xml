@@ -11,6 +11,12 @@
         android:background="@drawable/login_bg"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/toolbar_actionbar_login"
+            layout="@layout/toolbar_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
             android:id="@+id/form"
             android:layout_width="match_parent"
