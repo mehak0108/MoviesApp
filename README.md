@@ -1,4 +1,22 @@
-# MoviesApp
+# Have you scene it?
 
-The app will deal with the list of movies that will be displayed and then features would be added to it like we could rate the movie, like it, show its trailer, add it to our favorites, add comments and so on. The app would be responsive also i.e. it can be seen on different screens as well like tablets etc.
+Scene It? is an app which help to display the list of ongoing and retro movies. 
+
+## Features
+
+1. Movies can be added to favorites section.
+2. Search button helps to search movies on the basis of name.
+3. Details of a particular movie is displayed which includes trailer, rating, plot.
+4. Reviews can be posted for different movies.
+
+## Screenshots
+
+![alt text](screenshots/1.png "Dashboard")   ![alt text](screenshots/2.png "Navigation Drawer")
+![alt text](screenshots/3.png "Details")     ![alt text](screenshots/4.png "Review feature")
+![alt text](screenshots/5.png "Search")
+
+
+
+
+
 
