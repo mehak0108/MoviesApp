@@ -11,7 +11,8 @@ Scene It? is an app which help to display the list of ongoing and retro movies.
 
 ## Screenshots
 
-![alt text](screenshots/1.png "Dashboard")   ![alt text](screenshots/2.png "Navigation Drawer")
+![alt text|small](screenshots/1.png "Dashboard")
+![alt text](screenshots/2.png "Navigation Drawer")
 ![alt text](screenshots/3.png "Details")     ![alt text](screenshots/4.png "Review feature")
 ![alt text](screenshots/5.png "Search")
 
