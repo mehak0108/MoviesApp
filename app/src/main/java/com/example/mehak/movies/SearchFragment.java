@@ -114,12 +114,12 @@ public class SearchFragment extends Fragment {
         mSearchProgress = new ProgressDialog(getContext());
 
         Bundle args = getArguments();
-        if (savedInstanceState == null || !savedInstanceState.containsKey("moviesList")) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
             moviesList = new ArrayList<Movie>();
             adapter = new MovieAdapter(getActivity(), moviesList);
 
         } else {
-            moviesList = savedInstanceState.getParcelableArrayList("moviesList");
+            moviesList = savedInstanceState.getParcelableArrayList("movies");
             adapter = new MovieAdapter(getActivity(), moviesList);
 
         }

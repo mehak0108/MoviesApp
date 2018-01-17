@@ -244,7 +244,7 @@ public class RetroFragment extends Fragment {
                         appendQueryParameter(SORT_BY, sort_by_category + ".desc").
                         appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
                         appendQueryParameter(PAGE, String.valueOf(i)).
-                        appendQueryParameter(RELEASE_YEAR, String.valueOf(2017)).
+                        appendQueryParameter(RELEASE_YEAR, String.valueOf(R.string.retro_year)).
                         build();
                 Log.w(TAG, uri.toString());
 

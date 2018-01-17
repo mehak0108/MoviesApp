@@ -150,5 +150,4 @@
             android:layout_below="@id/reviews_list"
             android:layout_toRightOf="@id/postSection" />
     </RelativeLayout>
-
 </ScrollView>

@@ -269,7 +269,7 @@ public class OngoingFragment extends Fragment {
                         appendQueryParameter(SORT_BY, sort_by_category + ".desc").
                         appendQueryParameter(API_KEY, getActivity().getString(R.string.api_key)).
                         appendQueryParameter(PAGE, String.valueOf(i)).
-                        appendQueryParameter(RELEASE_YEAR, String.valueOf(2018)).
+                        appendQueryParameter(RELEASE_YEAR, String.valueOf(R.string.ongoing_year)).
                         build();
                 Log.w(TAG, uri.toString());
 

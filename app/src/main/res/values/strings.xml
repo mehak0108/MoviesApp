@@ -10,6 +10,8 @@
     <!-- Dashboard Activity-->
     <string name="ongoing_">Ongoing</string>
     <string name="retro">Retro</string>
+    <string name="retro_year">2017</string>
+    <string name="ongoing_year">2018</string>
 
     <!-- Settings activity-->
     <string name="pref_general_title">Sort By</string>
