@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Scene it?</string>
-    <string name="api_key">7139ff052030e32d5a0620148625fcbe</string>
+    <string name="api_key">YOUR_API_KEY</string>
 
     <!-- Signup-->
     <string name="ques">Don\'t have an account?</string>
